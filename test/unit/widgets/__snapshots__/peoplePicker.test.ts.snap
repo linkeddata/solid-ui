@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GroupBuilder.add runs 1`] = `Promise {}`;
+
+exports[`GroupBuilder.handleRemove runs 1`] = `[Function]`;
+
+exports[`PeoplePicker.render .. type index ... 1`] = `
+PeoplePicker {
+  "element": <p>
+    <div
+      style="max-width: 350px; min-height: 200px; outline: 1px solid black; display: flex;"
+    />
+  </p>,
+  "groupPickedCb": [Function],
+  "onSelectGroup": [Function],
+  "options": Object {
+    "selectedGroup": Object {},
+  },
+  "selectedgroup": undefined,
+  "typeIndex": "publicTypeIndex",
+}
+`;
+
+exports[`PeoplePicker.render mocking kb any for book 1`] = `
+PeoplePicker {
+  "element": <p>
+    <div
+      style="max-width: 350px; min-height: 200px; outline: 1px solid black; display: flex;"
+    />
+  </p>,
+  "groupPickedCb": [Function],
+  "onSelectGroup": [Function],
+  "options": Object {
+    "selectedGroup": true,
+  },
+  "selectedgroup": undefined,
+  "typeIndex": Object {},
+}
+`;
+
+exports[`PeoplePicker.render runs 1`] = `
+PeoplePicker {
+  "element": <p>
+    <div
+      style="max-width: 350px; min-height: 200px; outline: 1px solid black; display: flex;"
+    />
+  </p>,
+  "groupPickedCb": [Function],
+  "onSelectGroup": [Function],
+  "options": Object {
+    "selectedGroup": false,
+  },
+  "selectedgroup": undefined,
+  "typeIndex": Object {},
+}
+`;
+
+exports[`PeoplePicker.render runs 2 1`] = `
+PeoplePicker {
+  "element": <p>
+    <div
+      style="max-width: 350px; min-height: 200px; outline: 1px solid black; display: flex;"
+    />
+  </p>,
+  "groupPickedCb": [Function],
+  "onSelectGroup": [Function],
+  "options": Object {
+    "selectedGroup": true,
+  },
+  "selectedgroup": undefined,
+  "typeIndex": Object {},
+}
+`;
