@@ -58,7 +58,7 @@ function recordSharedPreferences (subject, context) {
 
 // Construct a personal defaults node in the preferences file for a given class of object
 //
-function recordPersonalDefaults (klass, context) {
+function recordPersonalDefaults (theClass, context) {
   return new Promise(function (resolve, reject) {
     authn.logInLoadPreferences(context).then(
       context => {
@@ -72,7 +72,7 @@ function recordPersonalDefaults (klass, context) {
         var regs = kb.each(
           null,
           ns.solid('forClass'),
-          klass,
+          theClass,
           context.preferencesFile
         )
         var ins = []
@@ -101,7 +101,7 @@ function recordPersonalDefaults (klass, context) {
               ns.solid('TypeRegistration'),
               context.preferencesFile
             ),
-            $rdf.st(reg, ns.solid('forClass'), klass, context.preferencesFile)
+            $rdf.st(reg, ns.solid('forClass'), theClass, context.preferencesFile)
           ]
         }
         prefs = widgets.newThing(context.preferencesFile)
@@ -115,7 +115,7 @@ function recordPersonalDefaults (klass, context) {
         )
         kb.updater.update([], ins, function (uri, ok, errm) {
           if (!ok) {
-            reject(new Error('Setting preferences for ' + klass + ': ' + errm))
+            reject(new Error('Setting preferences for ' + theClass + ': ' + errm))
           } else {
             context.personalDefaults = prefs
             resolve(context)
@@ -129,7 +129,7 @@ function recordPersonalDefaults (klass, context) {
   })
 }
 
-function renderPreferencesForm (subject, klass, preferencesForm, context) {
+function renderPreferencesForm (subject, theClass, preferencesForm, context) {
   var prefContainer = context.dom.createElement('div')
   pad.participationObject(subject, subject.doc(), context.me).then(
     participation => {
@@ -166,7 +166,7 @@ function renderPreferencesForm (subject, klass, preferencesForm, context) {
         )
 
         heading('My default view of any ' + context.noun)
-        recordPersonalDefaults(klass, context).then(
+        recordPersonalDefaults(theClass, context).then(
           context => {
             widgets.appendForm(
               dom,
@@ -220,7 +220,7 @@ function toJS (term) {
 // This is the function which acuakly reads and combines the preferences
 //
 //  @@ make it much more tolerant of missing buts of prefernces
-function getPreferencesForClass (subject, klass, predicates, context) {
+function getPreferencesForClass (subject, theClass, predicates, context) {
   return new Promise(function (resolve, reject) {
     recordSharedPreferences(subject, context).then(context => {
       var sharedPreferences = context.sharedPreferences
@@ -228,7 +228,7 @@ function getPreferencesForClass (subject, klass, predicates, context) {
         pad
           .participationObject(subject, subject.doc(), context.me)
           .then(participation => {
-            recordPersonalDefaults(klass, context).then(context => {
+            recordPersonalDefaults(theClass, context).then(context => {
               var results = []
               var personalDefaults = context.personalDefaults
               predicates.forEach(pred => {

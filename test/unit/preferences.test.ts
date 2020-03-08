@@ -42,11 +42,11 @@ describe('Preferences.renderPreferencesForm', () => {
   })
   it('runs', () => {
     const subject = sym('https://test.test')
-    const klass = {}
+    const theClass = {}
     const preferencesForm = {}
     const context = { dom }
     expect(Preferences.renderPreferencesForm(
-      subject, klass, preferencesForm, context
+      subject, theClass, preferencesForm, context
     )).toBeTruthy()
   })
 })

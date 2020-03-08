@@ -452,14 +452,14 @@ async function ensureOneTypeIndex (context: AuthenticationContext, isPublic: boo
  */
 export async function findAppInstances (
   context: AuthenticationContext,
-  klass: $rdf.NamedNode,
+  theClass: $rdf.NamedNode,
   isPublic: boolean
 ): Promise<AuthenticationContext> {
   const fetcher = kb.fetcher
   if (isPublic === undefined) {
     // Then both public and private
-    await findAppInstances(context, klass, true)
-    await findAppInstances(context, klass, false)
+    await findAppInstances(context, theClass, true)
+    await findAppInstances(context, theClass, false)
     return context
   }
 
@@ -471,7 +471,7 @@ export async function findAppInstances (
   const index = context.index as { [key: string]: Array<$rdf.NamedNode> }
   const thisIndex = index[visibility]
   const registrations = thisIndex
-    .map(ix => kb.each(undefined, ns.solid('forClass'), klass, ix))
+    .map(ix => kb.each(undefined, ns.solid('forClass'), theClass, ix))
     .flat()
   const instances = registrations
     .map(reg => kb.each(reg, ns.solid('instance')))
@@ -494,7 +494,7 @@ export async function findAppInstances (
   } catch (err) {
     const e = new Error(`[FAI] Unable to load containers${err}`)
     console.log(e) // complain
-    widgets.complain(context, `Error looking for ${utils.label(klass)}:  ${err}`)
+    widgets.complain(context, `Error looking for ${utils.label(theClass)}:  ${err}`)
     // but then ignore it
     // throw new Error(e)
   }
@@ -530,7 +530,7 @@ function updatePromise (
 export async function registerInTypeIndex (
   context: AuthenticationContext,
   instance: $rdf.NamedNode,
-  klass: $rdf.NamedNode,
+  theClass: $rdf.NamedNode,
   isPublic: boolean
 ): Promise<AuthenticationContext> {
   await ensureOneTypeIndex(context, isPublic)
@@ -546,7 +546,7 @@ export async function registerInTypeIndex (
   const ins = [
     // See https://github.com/solid/solid/blob/master/proposals/data-discovery.md
     $rdf.st(registration, ns.rdf('type'), ns.solid('TypeRegistration'), index),
-    $rdf.st(registration, ns.solid('forClass'), klass, index),
+    $rdf.st(registration, ns.solid('forClass'), theClass, index),
     $rdf.st(registration, ns.solid('instance'), instance, index)
   ]
   try {
@@ -564,7 +564,7 @@ export async function registerInTypeIndex (
 export function registrationControl (
   context: AuthenticationContext,
   instance,
-  klass
+  theClass
 ): Promise<AuthenticationContext | void> {
   const dom = context.dom
   if (!dom || !context.div) {
@@ -584,14 +584,14 @@ export function registrationControl (
         const registrations = kb
           .each(undefined, ns.solid('instance'), instance)
           .filter(function (r) {
-            return kb.holds(r, ns.solid('forClass'), klass)
+            return kb.holds(r, ns.solid('forClass'), theClass)
           })
         const reg = registrations.length
           ? registrations[0]
           : widgets.newThing(index)
         return [
           $rdf.st(reg, ns.solid('instance'), instance, index),
-          $rdf.st(reg, ns.solid('forClass'), klass, index)
+          $rdf.st(reg, ns.solid('forClass'), theClass, index)
         ]
       }
 
@@ -712,7 +712,7 @@ export function registrationList (context: AuthenticationContext, options: {
     }
 
     /*
-       //const containers = kb.each(klass, ns.solid('instanceContainer'));
+       //const containers = kb.each(theClass, ns.solid('instanceContainer'));
        if (containers.length) {
        fetcher.load(containers).then(function(xhrs){
        for (const i=0; i<containers.length; i++) {

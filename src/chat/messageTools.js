@@ -95,7 +95,7 @@ export function sentimentStripLinked (target, doc) {
     ])
     sentiments.sort()
     sentiments.forEach(ss => {
-      const [klass, agent] = ss
+      const [theClass, agent] = ss
       var res
       if (agent) {
         res = dom.createElement('a')
@@ -103,7 +103,7 @@ export function sentimentStripLinked (target, doc) {
       } else {
         res = dom.createTextNode('')
       }
-      res.textContent = emoji[klass] || '*'
+      res.textContent = emoji[theClass] || '*'
       strip.appendChild(res)
     })
   }

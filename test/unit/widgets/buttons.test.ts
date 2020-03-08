@@ -76,9 +76,9 @@ describe('askName', () => {
     const kb = graph()
     const container = element
     const predicate = {} as NamedNode
-    const klass = {} as NamedNode
+    const theClass = {} as NamedNode
     const noun = ''
-    expect(await askName(dom, kb, container, predicate, klass, noun)).toBeTruthy()
+    expect(await askName(dom, kb, container, predicate, theClass, noun)).toBeTruthy()
   })
 })
 

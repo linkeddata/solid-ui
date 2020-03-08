@@ -53,12 +53,14 @@
 
  <h2 id="askName"><a href="#askName">askName</a></h2>
   <script id="script-askName">
-    window.addEventListener('DOMContentLoaded', (event) => {
-      const promise = UI.widgets.askName(document, UI.store, $('#div-askName'))
-      promise
-        .then((name) => window.alert(`You picked "${name}"`))
-        .catch((err) => window.alert(`Error asking name`))
-    })
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const name = await UI.widgets.askName(document, UI.store, $('#div-askName'))
+        window.alert(`You picked "${name}"`)
+      } catch (error) {
+        window.alert(`Error asking name`)
+      }
+    });
   </script>
   <pre id="viewSource-askName"></pre><script>showSource('askName')</script>
   <div id="div-askName"></div>

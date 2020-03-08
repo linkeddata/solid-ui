@@ -374,8 +374,8 @@ export function setImage (element: HTMLElement, thing: NamedNode) { // 20191230a
   for (var k in iconForClass) {
     const pref = k.split(':')[0]
     const id = k.split(':')[1]
-    const klass = ns[pref](id)
-    iconForClassMap[klass.uri] = uri.join(iconForClass[k], iconBase)
+    const theClass = ns[pref](id)
+    iconForClassMap[theClass.uri] = uri.join(iconForClass[k], iconBase)
   }
 
   const happy = trySetImage(element, thing, iconForClassMap)
@@ -525,7 +525,7 @@ export function continueButton (dom: HTMLDocument, handler: (event: any) => void
 /* Grab a name for a new thing
  *
  * Form to get the name of a new thing before we create it
- * @params klass  Misspelt to avoid clashing with the JavaScript keyword
+ * @params theClass  Misspelt to avoid clashing with the JavaScript keyword
  * @returns: a promise of (a name or null if cancelled)
  */
 export function askName (
@@ -533,14 +533,14 @@ export function askName (
   kb: IndexedFormula,
   container: HTMLDivElement,
   predicate?: NamedNode,
-  klass?: NamedNode,
+  theClass?: NamedNode,
   noun?: string) {
   // eslint-disable-next-line promise/param-names
   return new Promise(function (resolve, _reject) {
     var form = dom.createElement('div') // form is broken as HTML behaviour can resurface on js error
     // classLabel = utils.label(ns.vcard('Individual'))
     predicate = predicate || ns.foaf('name') // eg 'name' in user's language
-    noun = noun || (klass ? utils.label(klass) : '  ') // eg 'folder' in users's language
+    noun = noun || (theClass ? utils.label(theClass) : '  ') // eg 'folder' in users's language
     var prompt = noun + ' ' + utils.label(predicate) + ': '
     form.appendChild(dom.createElement('p')).textContent = prompt
     var namefield = dom.createElement('input')

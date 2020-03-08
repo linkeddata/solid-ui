@@ -94,11 +94,11 @@ function updatePromise (del, ins) {
 /** Find a user's bookmarks
  */
 export async function findBookmarkDocument (userContext) {
-  const klass = BOOK('Bookmark')
+  const theClass = BOOK('Bookmark')
   const fileTail = 'bookmarks.ttl'
   const isPublic = true
 
-  await UI.authn.findAppInstances(userContext, klass, isPublic) // public -- only look for public links
+  await UI.authn.findAppInstances(userContext, theClass, isPublic) // public -- only look for public links
   if (userContext.instances && userContext.instances.length > 0) {
     userContext.bookmarkDocument = userContext.instances[0]
     if (userContext.instances.length > 1) {
@@ -120,7 +120,7 @@ export async function findBookmarkDocument (userContext) {
       await UI.authn.registerInTypeIndex(
         userContext,
         newBookmarkFile,
-        klass,
+        theClass,
         true
       ) // public
       userContext.bookmarkDocument = newBookmarkFile
