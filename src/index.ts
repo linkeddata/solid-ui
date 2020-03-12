@@ -66,8 +66,7 @@ import store from './store'
 import style from './style'
 // @ts-ignore
 import table from './table'
-// @ts-ignore
-import tabs from './tabs'
+import * as tabs from './tabs'
 // @ts-ignore
 import utils from './utils'
 import widgets from './widgets'

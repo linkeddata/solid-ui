@@ -1,582 +1,402 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE HTML>
+<html lang="en">
 <head>
-  <meta name="generator" content=
-  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.17), see www.w3.org" />
-  <meta http-equiv="Content-Type" content=
-  "text/html; charset=us-ascii" />
+    <meta charset='UTF-8'>
+    <title>solid-ui UI.tabs examples page</title>
+    <script type="text/javascript" src="../../lib/webpack-bundle.js"></script>
+    <script id="data-tabWidget-with-collection" type="text/turtle">
+        @prefix : <#> .
 
-  <title>Test tabs.js</title>
-  <link type="text/css" rel="stylesheet" href=
-  "https://linkeddata.github.io/tabulator-firefox/content/tabbedtab.css" />
+        :subject1
+            :predicate1 ( :item1A :item1B ) .
+    </script>
+    <script id="data-tabWidget-with-unsorted-triples" type="text/turtle">
+        @prefix :     <#> .
+        @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-  <style type="text/css">
-<![CDATA[
+        :subject2
+            :predicate2 :item2A, :item2B .
 
-  input { background-color: #eef; padding: 0.5em;  border: .5em solid white; font-size: 120%; };
+        :item2A
+            rdfs:label "Tab 1" .
 
-  table  { border-collapse: collapse;}
+        :item2B
+            rdfs:label "Tab 2" .
+    </script>
+    <script>
+      function showData (widgetName) {
+        const viewDataElement = document.querySelector(`#viewData-${widgetName}`)
+        if (!viewDataElement) return
+        viewDataElement.innerHTML = document.querySelector(`#data-${widgetName}`).innerText
+          .replace(/        /g, '')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+      }
 
-  tr.naviMenu  { background-color: white;}
-  tr.naviMenu td { text-align: middle; vertical-align: middle; padding-top: 4em; };
+      function showSource (widgetName) {
+        document.querySelector(`#viewSource-${widgetName}`).innerHTML = document.querySelector(`#script-${widgetName}`).innerText
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;')
+      }
 
-  table.tbody tr td { padding: 1em; border: 0.1em solid gray;}
+      function loadData (dataTag) {
+        UI.rdf.parse(dataTag.innerText, UI.store, location.origin, 'text/turtle', error => {
+          if (error) console.error(error)
+        })
+      }
 
-  td.input {border-top: 0.1em solid gray;  border-right: 0.1em dotted gray; }
-  td.restart {border-top: 0.3em solid black;  border-right: 0.1em dotted gray; }
-  td.output {border-top: 0.1em solid gray;}
+      Array.from(document.querySelectorAll('script[type="text/turtle"]')).forEach(dataTag => loadData(dataTag))
 
-  ]]>
-  </style>
-  <script type="text/javascript" src="../../lib/webpack-bundle.js">
-</script>
-<!-- "https://linkeddata.github.io/app-schedule/schedule.js" -->
-
-  <script type="text/javascript" src="test-tabs.js">
-</script>
+      window.addEventListener('DOMContentLoaded', () => {
+        Array.from(document.querySelectorAll('article')).forEach(title => {
+          const section = title.id
+          showData(section)
+          showSource(section)
+        })
+      })
+    </script>
 </head>
-
 <body>
-  <div class="TabulatorOutline" id="DummyUUID">
-    <table id="outline" summary="Space for where the test happens">
-    </table>
-  </div>
 
-  <div class="TabulatorOutline" id='UITestArea'></div>
+<h1>The Tabs module</h1>
+
+<p>
+    On this page you'll find some examples from the Tabs module.
+</p>
+
+<article id="tabWidget-with-collection">
+    <h2>
+        <a href="#tabWidget-with-collection">
+            <code>tabWidget</code>: Populating content using an RDF collection
+        </a>
+    </h2>
+    <p>
+        In this first example we'll see how you can generate a tabs widget using triples that are formatted as a
+        collection
+        in RDF. See <a href="https://solid.github.io/solid-ui/Documentation/api/modules/_tabs_.html#tabwidget">API
+        documentation</a>
+        for more info about how to use the tabWidget.
+    </p>
+    <script id="script-tabWidget-with-collection">
+      window.addEventListener('DOMContentLoaded', () => {
+        const subject = UI.rdf.namedNode(location.origin + '#subject1')
+        const predicate = UI.rdf.namedNode(location.origin + '#predicate1')
+        const tabs = UI.tabs.tabWidget({
+          subject,
+          predicate,
+          renderMain: (bodyMain, subject) => {
+            bodyMain.innerText = `Content of ${subject.uri}`
+          }
+        })
+        document.querySelector('#demo-tabWidget-with-collection').appendChild(tabs)
+      })
+    </script>
+    <p>
+        The triples belows shows the minimum data you need to start using the tabWidget in combination with
+        <code>UI.store</code>.
+    </p>
+    <pre id="viewData-tabWidget-with-collection"></pre>
+    <p>
+        Note that you would probably use <code>UI.rdf.namedNode</code> directly from rdflib.js. (E.g. instead of
+        <code>UI.rdf.namedNode</code> you would probably make use of namedNode with
+        <code>import { namedNode } from 'rdflib'</code>.
+    </p>
+    <pre id="viewSource-tabWidget-with-collection"></pre>
+    <div id="demo-tabWidget-with-collection"></div>
+</article>
+
+<article id="tabWidget-with-unsorted-triples">
+    <h2>
+        <a href="#tabWidget-with-unsorted-triples">
+            <code>tabWidget</code>: Populating content using unsorted triples
+        </a>
+    </h2>
+    <p>
+        In this second example we'll use an unsorted set of triples instead of a collection.
+    </p>
+    <script id="script-tabWidget-with-unsorted-triples">
+      window.addEventListener('DOMContentLoaded', () => {
+        const subject = UI.rdf.namedNode(location.origin + '#subject2')
+        const predicate = UI.rdf.namedNode(location.origin + '#predicate2')
+        const tabs = UI.tabs.tabWidget({
+          subject,
+          predicate,
+          ordered: false,
+          renderMain: (bodyMain, subject) => {
+            bodyMain.innerText = `Content of ${UI.utils.label(subject)}`
+          }
+        })
+        document.querySelector('#demo-tabWidget-with-unsorted-triples').appendChild(tabs)
+      })
+    </script>
+    <p>
+        This is the data we will be working with. Note that we've also added labels to the items to help the widget know
+        how to label the tabs.
+    </p>
+    <pre id="viewData-tabWidget-with-unsorted-triples"></pre>
+    <p>
+        Note that we've set option ordered to false in this example.
+    </p>
+    <pre id="viewSource-tabWidget-with-unsorted-triples"></pre>
+    <div id="demo-tabWidget-with-unsorted-triples"></div>
+</article>
+
+<article id="tabWidget-with-items">
+    <h2>
+        <a href="#tabWidget-with-unsorted-triples">
+            <code>tabWidget</code>: Populating content using option <code>items</code>
+        </a>
+    </h2>
+    <p>
+        Finally we can set the items manually by using option <code>items</code>.
+    </p>
+    <script id="script-tabWidget-with-items">
+      window.addEventListener('DOMContentLoaded', () => {
+        const item1 = UI.rdf.namedNode(location.origin + '#item3A')
+        const item2 = UI.rdf.namedNode(location.origin + '#item3B')
+        const tabs = UI.tabs.tabWidget({
+          items: [item1, item2],
+          renderMain: (bodyMain, subject) => {
+            bodyMain.innerText = `Content of ${subject}`
+          }
+        })
+        document.querySelector('#demo-tabWidget-with-items').appendChild(tabs)
+      })
+    </script>
+    <p>
+        We do not need to use options <code>subject</code> and <code>predicate</code> when using <code>items</code>.
+    </p>
+    <pre id="viewSource-tabWidget-with-items"></pre>
+    <p>
+        For the remaining examples we'll use option <code>items</code> to populate our tabs.
+    </p>
+    <div id="demo-tabWidget-with-items"></div>
+</article>
+
+<article id="tabWidget-option-backgroundColor">
+    <h2>
+        <a href="#tabWidget-option-backgroundColor">
+            <code>tabWidget</code>: Option <code>backgroundColor</code>
+        </a>
+    </h2>
+    <p>
+        Using option <code>backgroundColor</code> we can set a specific color (in hex value) to our tabs. It will
+        consider how light a color is when figuring out which color to set to the text. It will also distinguish
+        between selected and not selected tabs by coloring the selected tab a bit darker.
+    </p>
+    <script id="script-tabWidget-option-backgroundColor">
+      window.addEventListener('DOMContentLoaded', () => {
+        const item1 = UI.rdf.namedNode(location.origin + '#item3A')
+        const item2 = UI.rdf.namedNode(location.origin + '#item3B')
+        document.querySelector('#demo-tabWidget-option-backgroundColor').appendChild(UI.tabs.tabWidget({
+          backgroundColor: '#ff0000', // hex color for red
+          items: [item1, item2],
+          renderMain: (bodyMain, subject) => {
+            bodyMain.innerText = `Content of ${subject}`
+          }
+        }))
+        document.querySelector('#demo-tabWidget-option-backgroundColor').appendChild(UI.tabs.tabWidget({
+          backgroundColor: '#ffff00', // hex color for yellow
+          items: [item1, item2],
+          renderMain: (bodyMain, subject) => {
+            bodyMain.innerText = `Content of ${subject}`
+          }
+        }))
+      })
+    </script>
+    <pre id="viewSource-tabWidget-option-backgroundColor"></pre>
+    <div id="demo-tabWidget-option-backgroundColor"></div>
+</article>
+
+<article id="tabWidget-option-onClose">
+    <h2>
+        <a href="#tabWidget-option-onClose"><code>tabWidget</code>: Option <code>onClose</code></a>
+    </h2>
+    <p>
+        Using option <code>backgroundColor</code> we can set a specific color (in hex value) to our tabs. It will
+        consider how light a color is when figuring out which color to set to the text.
+    </p>
+    <script id="script-tabWidget-option-onClose">
+      window.addEventListener('DOMContentLoaded', function createTabsWithOnClose () {
+        const demo = document.querySelector('#demo-tabWidget-option-onClose')
+        const item1 = UI.rdf.namedNode(location.origin + '#item3A')
+        const item2 = UI.rdf.namedNode(location.origin + '#item3B')
+        demo.appendChild(UI.tabs.tabWidget({
+          items: [item1, item2],
+          onClose: () => {
+            const showTabsButton = document.createElement('button')
+            showTabsButton.innerText = 'Show Tabs'
+            showTabsButton.onclick = () => {
+              demo.innerHTML = ''
+              createTabsWithOnClose()
+            }
+            demo.innerHTML = ''
+            demo.appendChild(showTabsButton)
+          },
+          renderMain: (bodyMain, subject) => {
+            bodyMain.innerText = `Content of ${subject}`
+          }
+        }))
+      })
+    </script>
+    <pre id="viewSource-tabWidget-option-onClose"></pre>
+    <div id="demo-tabWidget-option-onClose"></div>
+</article>
+
+<article id="tabWidget-option-orientation">
+    <h2>
+        <a href="#tabWidget-option-orientation"><code>tabWidget</code>: Option <code>orientation</code></a>
+    </h2>
+    <p>
+        Using option <code>orientation</code> we can set how the tabs and body should be positioned.
+    </p>
+    <script id="script-tabWidget-option-orientation">
+      window.addEventListener('DOMContentLoaded', function createTabsWithOnClose () {
+        const demo = document.querySelector('#demo-tabWidget-option-orientation')
+        const item1 = UI.rdf.namedNode(location.origin + '#item3A')
+        const item2 = UI.rdf.namedNode(location.origin + '#item3B')
+        demo.appendChild(UI.tabs.tabWidget({
+          items: [item1, item2],
+          orientation: '1', // tabs shown to the left of body
+          renderMain: (bodyMain, subject) => {
+            bodyMain.innerText = `Content of ${subject}`
+          }
+        }))
+        demo.appendChild(UI.tabs.tabWidget({
+          items: [item1, item2],
+          orientation: '2', // tabs shown below body
+          renderMain: (bodyMain, subject) => {
+            bodyMain.innerText = `Content of ${subject}`
+          }
+        }))
+        demo.appendChild(UI.tabs.tabWidget({
+          items: [item1, item2],
+          orientation: '3', // tabs shown to the right of body
+          renderMain: (bodyMain, subject) => {
+            bodyMain.innerText = `Content of ${subject}`
+          }
+        }))
+      })
+    </script>
+    <pre id="viewSource-tabWidget-option-orientation"></pre>
+    <div id="demo-tabWidget-option-orientation"></div>
+</article>
+
+<article id="tabWidget-option-renderTab">
+    <h2>
+        <a href="#tabWidget-option-renderTab"><code>tabWidget</code>: Option <code>renderTab</code></a>
+    </h2>
+    <p>
+        <code>renderTab</code> allows us to override the default behavior for how tabs are rendered, e.g.
+        which text should be shown for each tab.
+    </p>
+    <script id="script-tabWidget-option-renderTab">
+      window.addEventListener('DOMContentLoaded', function createTabsWithOnClose () {
+        const demo = document.querySelector('#demo-tabWidget-option-renderTab')
+        const item1 = UI.rdf.namedNode(location.origin + '#item3A')
+        const item2 = UI.rdf.namedNode(location.origin + '#item3B')
+        demo.appendChild(UI.tabs.tabWidget({
+          items: [item1, item2],
+          renderMain: (bodyMain, subject) => {
+            bodyMain.innerText = `Content of ${subject}`
+          },
+          renderTab: (tabDiv, subject) => {
+            tabDiv.innerText = `Go to ${subject.uri}`
+          }
+        }))
+      })
+    </script>
+    <pre id="viewSource-tabWidget-option-renderTab"></pre>
+    <div id="demo-tabWidget-option-renderTab"></div>
+</article>
+
+<article id="tabWidget-option-renderTabSettings">
+    <h2>
+        <a href="#tabWidget-option-renderTabSettings"><code>tabWidget</code>: Option <code>renderTabSettings</code></a>
+    </h2>
+    <p>
+        <code>renderTabSettings</code> functions much like <code>renderMain</code>, expect that it is triggered by
+        holding ALT key (Option key on Mac) and clicking on a tab.
+    </p>
+    <script id="script-tabWidget-option-renderTabSettings">
+      window.addEventListener('DOMContentLoaded', function createTabsWithOnClose () {
+        const demo = document.querySelector('#demo-tabWidget-option-renderTabSettings')
+        const item1 = UI.rdf.namedNode(location.origin + '#item3A')
+        const item2 = UI.rdf.namedNode(location.origin + '#item3B')
+        demo.appendChild(UI.tabs.tabWidget({
+          items: [item1, item2],
+          renderMain: (bodyMain, subject) => {
+            bodyMain.innerText = `Content of ${subject}`
+          },
+          renderTabSettings: (bodyMain, subject) => {
+            bodyMain.innerText = `Settings for ${subject.uri}`
+          }
+        }))
+      })
+    </script>
+    <pre id="viewSource-tabWidget-option-renderTabSettings"></pre>
+    <p>Remember to hold ALT while click on a tab to show settings for the given tab.</p>
+    <div id="demo-tabWidget-option-renderTabSettings"></div>
+</article>
+
+<article id="tabWidget-option-selectedTab">
+    <h2>
+        <a href="#tabWidget-option-selectedTab"><code>tabWidget</code>: Option <code>selectedTab</code></a>
+    </h2>
+    <p>
+        <code>selectedTab</code> allows you to set which tab should be opened by when the widget is initially
+        rendered. It must be used in junction with <code>renderTab</code> since it relies on <code>dataset.name</code>
+        being set.
+    </p>
+    <script id="script-tabWidget-option-selectedTab">
+      window.addEventListener('DOMContentLoaded', function createTabsWithOnClose () {
+        const demo = document.querySelector('#demo-tabWidget-option-selectedTab')
+        const item1 = UI.rdf.namedNode(location.origin + '#item3A')
+        const item2 = UI.rdf.namedNode(location.origin + '#item3B')
+        demo.appendChild(UI.tabs.tabWidget({
+          items: [item1, item2],
+          renderMain: (bodyMain, subject) => {
+            bodyMain.innerText = `Content of ${subject}`
+          },
+          renderTab: (tabDiv, subject) => {
+            tabDiv.dataset.name = subject.uri
+            tabDiv.innerText = UI.utils.label(subject)
+          },
+          selectedTab: item2.uri
+        }))
+      })
+    </script>
+    <pre id="viewSource-tabWidget-option-selectedTab"></pre>
+    <div id="demo-tabWidget-option-selectedTab"></div>
+</article>
+
+<article id="tabWidget-option-startEmpty">
+    <h2>
+        <a href="#tabWidget-option-startEmpty"><code>tabWidget</code>: Option <code>startEmpty</code></a>
+    </h2>
+    <p>
+        <code>startEmpty</code> makes it so that a the body of a tab isn't shown when initially rendered.
+    </p>
+    <script id="script-tabWidget-option-startEmpty">
+      window.addEventListener('DOMContentLoaded', function createTabsWithOnClose () {
+        const demo = document.querySelector('#demo-tabWidget-option-startEmpty')
+        const item1 = UI.rdf.namedNode(location.origin + '#item3A')
+        const item2 = UI.rdf.namedNode(location.origin + '#item3B')
+        demo.appendChild(UI.tabs.tabWidget({
+          items: [item1, item2],
+          renderMain: (bodyMain, subject) => {
+            bodyMain.innerText = `Content of ${subject}`
+          },
+          startEmpty: true
+        }))
+      })
+    </script>
+    <pre id="viewSource-tabWidget-option-startEmpty"></pre>
+    <div id="demo-tabWidget-option-startEmpty"></div>
+</article>
 
-  <h2>Test Tabs widget</h2>
-  <pre id='Prologue'>
-    @prefix foaf:  &lt;http://xmlns.com/foaf/0.1/&gt;.
-    @prefix sched: &lt;http://www.w3.org/ns/pim/schedule#&gt;.
-    @prefix cal:   &lt;http://www.w3.org/2002/12/cal/ical#&gt;.
-    @prefix dc:    &lt;http://purl.org/dc/elements/1.1/&gt;.
-    @prefix ui:    &lt;http://www.w3.org/ns/ui#&gt;.
-    @prefix trip:  &lt;http://www.w3.org/ns/pim/trip#&gt;.
-</pre>
-
-  <div>
-    <table style=
-    'border-collapse: collapse; border: 0.1em solid gray;' summary=
-    "Table of input data values and UI outputs generated">
-      <tbody id='TestData'>
-        <tr>
-          <td class='restart'>
-            <pre>
-   # Initialize a basic set of 3 tabs
-&lt;#tabs&gt; a ui:Tabs;
-  ui:predicate trip:attachmentList;
-  ui:orientation 0; ui:ordered true;
-  ui:subject &lt;#it&gt;.
-&lt;#it&gt;
-  trip:attachmentList ( &lt;http://aclu.org/&gt; &lt;http://inrupt.com/&gt; &lt;https://webfoundation.org/&gt; ) .
-
-#ends
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-    # Remove the middle tab
-    &lt;#tabs&gt; a ui:Tabs;
-      ui:predicate trip:attachmentList;
-      ui:orientation 0; ui:ordered true;
-      ui:subject &lt;#it&gt;.
-    &lt;#it&gt;
-      trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-     #  Add three more in the middle
-     &lt;#tabs&gt; a ui:Tabs;
-       ui:predicate trip:attachmentList;
-       ui:orientation 0; ui:ordered true;
-       ui:subject &lt;#it&gt;.
-     &lt;#it&gt;
-       trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;http://bbc.co.uk/&gt;  &lt;http://cbc.ca/&gt;  &lt;http://dbp.de/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-      #  Add three more in the middle
-      &lt;#tabs&gt; a ui:Tabs;
-        ui:predicate trip:attachmentList;
-        ui:orientation 0; ui:ordered true;
-        ui:subject &lt;#it&gt;.
-      &lt;#it&gt;
-        trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;http://bbc.co.uk/&gt;  &lt;http://cbc.ca/&gt;  &lt;http://dbp.de/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-       #  Add one more on each end
-       &lt;#tabs&gt; a ui:Tabs;
-         ui:predicate trip:attachmentList;
-         ui:orientation 0; ui:ordered true;
-         ui:subject &lt;#it&gt;.
-       &lt;#it&gt;
-         trip:attachmentList ( &lt;http://acm.org/&gt;  &lt;http://aclu.org/&gt;
-         &lt;http://bbc.co.uk/&gt;  &lt;http://cbc.ca/&gt;  &lt;http://dbp.de/&gt;  &lt;https://webfoundation.org/&gt;
-         &lt;http://www.zenith.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-        #  Reverse the list
-        &lt;#tabs&gt; a ui:Tabs;
-          ui:predicate trip:attachmentList;
-          ui:orientation 0; ui:ordered true;
-          ui:subject &lt;#it&gt;.
-        &lt;#it&gt;
-          trip:attachmentList (
-          &lt;http://www.zenith.org/&gt;
-          &lt;https://webfoundation.org/&gt;
-          &lt;http://dbp.de/&gt;
-          &lt;http://cbc.ca/&gt;
-          &lt;http://bbc.co.uk/&gt;
-          &lt;http://aclu.org/&gt;
-          &lt;http://acm.org/&gt;
-           ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-      # Remove all but one
-      &lt;#tabs&gt; a ui:Tabs;
-        ui:predicate trip:attachmentList;
-        ui:orientation 0; ui:ordered true;
-        ui:subject &lt;#it&gt;.
-      &lt;#it&gt;
-        trip:attachmentList ( &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr><!--    1   -->
-
-        <tr>
-          <td class='restart'>
-            <pre>
-       &lt;#tabs&gt; a ui:Tabs;
-         ui:predicate trip:attachmentList;
-         ui:orientation 1; ui:ordered true;
-         ui:subject &lt;#it&gt;.
-       &lt;#it&gt;
-         trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-         # Remove the middle tab
-         &lt;#tabs&gt; a ui:Tabs;
-           ui:predicate trip:attachmentList;
-           ui:orientation 1; ui:ordered true;
-           ui:subject &lt;#it&gt;.
-         &lt;#it&gt;
-           trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-          #  Add three more in the middle
-          &lt;#tabs&gt; a ui:Tabs;
-            ui:predicate trip:attachmentList;
-            ui:orientation 1; ui:ordered true;
-            ui:subject &lt;#it&gt;.
-          &lt;#it&gt;
-            trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;http://bbc.co.uk/&gt;  &lt;http://cbc.ca/&gt;  &lt;http://dbp.de/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-           #  Add three more in the middle
-           &lt;#tabs&gt; a ui:Tabs;
-             ui:predicate trip:attachmentList;
-             ui:orientation 1; ui:ordered true;
-             ui:subject &lt;#it&gt;.
-           &lt;#it&gt;
-             trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;http://bbc.co.uk/&gt;  &lt;http://cbc.ca/&gt;  &lt;http://dbp.de/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-            #  Add one more on each end
-            &lt;#tabs&gt; a ui:Tabs;
-              ui:predicate trip:attachmentList;
-              ui:orientation 1; ui:ordered true;
-              ui:subject &lt;#it&gt;.
-            &lt;#it&gt;
-              trip:attachmentList ( &lt;http://acm.org/&gt;  &lt;http://aclu.org/&gt;
-              &lt;http://bbc.co.uk/&gt;  &lt;http://cbc.ca/&gt;  &lt;http://dbp.de/&gt;  &lt;https://webfoundation.org/&gt;
-              &lt;http://www.zenith.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-             #  Reverse the list
-             &lt;#tabs&gt; a ui:Tabs;
-               ui:predicate trip:attachmentList;
-               ui:orientation 1; ui:ordered true;
-               ui:subject &lt;#it&gt;.
-             &lt;#it&gt;
-               trip:attachmentList (
-               &lt;http://www.zenith.org/&gt;
-               &lt;https://webfoundation.org/&gt;
-               &lt;http://dbp.de/&gt;
-               &lt;http://cbc.ca/&gt;
-               &lt;http://bbc.co.uk/&gt;
-               &lt;http://aclu.org/&gt;
-               &lt;http://acm.org/&gt;
-                ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-           # Remove all but one
-           &lt;#tabs&gt; a ui:Tabs;
-             ui:predicate trip:attachmentList;
-             ui:orientation 1; ui:ordered true;
-             ui:subject &lt;#it&gt;.
-           &lt;#it&gt;
-             trip:attachmentList ( &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr><!--  2 -->
-
-        <tr>
-          <td class='restart'>
-            <pre>
-            &lt;#tabs&gt; a ui:Tabs;
-              ui:predicate trip:attachmentList;
-              ui:orientation 2; ui:ordered true;
-              ui:subject &lt;#it&gt;.
-            &lt;#it&gt;
-              trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-              # Remove the middle tab
-              &lt;#tabs&gt; a ui:Tabs;
-                ui:predicate trip:attachmentList;
-                ui:orientation 2; ui:ordered true;
-                ui:subject &lt;#it&gt;.
-              &lt;#it&gt;
-                trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-               #  Add three more in the middle
-               &lt;#tabs&gt; a ui:Tabs;
-                 ui:predicate trip:attachmentList;
-                 ui:orientation 2; ui:ordered true;
-                 ui:subject &lt;#it&gt;.
-               &lt;#it&gt;
-                 trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;http://bbc.co.uk/&gt;  &lt;http://cbc.ca/&gt;  &lt;http://dbp.de/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-                #  Add three more in the middle
-                &lt;#tabs&gt; a ui:Tabs;
-                  ui:predicate trip:attachmentList;
-                  ui:orientation 2; ui:ordered true;
-                  ui:subject &lt;#it&gt;.
-                &lt;#it&gt;
-                  trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;http://bbc.co.uk/&gt;  &lt;http://cbc.ca/&gt;  &lt;http://dbp.de/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-                 #  Add one more on each end
-                 &lt;#tabs&gt; a ui:Tabs;
-                   ui:predicate trip:attachmentList;
-                   ui:orientation 2; ui:ordered true;
-                   ui:subject &lt;#it&gt;.
-                 &lt;#it&gt;
-                   trip:attachmentList ( &lt;http://acm.org/&gt;  &lt;http://aclu.org/&gt;
-                   &lt;http://bbc.co.uk/&gt;  &lt;http://cbc.ca/&gt;  &lt;http://dbp.de/&gt;  &lt;https://webfoundation.org/&gt;
-                   &lt;http://www.zenith.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-                  #  Reverse the list
-                  &lt;#tabs&gt; a ui:Tabs;
-                    ui:predicate trip:attachmentList;
-                    ui:orientation 2; ui:ordered true;
-                    ui:subject &lt;#it&gt;.
-                  &lt;#it&gt;
-                    trip:attachmentList (
-                    &lt;http://www.zenith.org/&gt;
-                    &lt;https://webfoundation.org/&gt;
-                    &lt;http://dbp.de/&gt;
-                    &lt;http://cbc.ca/&gt;
-                    &lt;http://bbc.co.uk/&gt;
-                    &lt;http://aclu.org/&gt;
-                    &lt;http://acm.org/&gt;
-                     ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-                # Remove all but one
-                &lt;#tabs&gt; a ui:Tabs;
-                  ui:predicate trip:attachmentList;
-                  ui:orientation 2; ui:ordered true;
-                  ui:subject &lt;#it&gt;.
-                &lt;#it&gt;
-                  trip:attachmentList ( &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr><!--   3  -->
-
-        <tr>
-          <td class='restart'>
-            <pre>
-     &lt;#tabs&gt; a ui:Tabs;
-       ui:predicate trip:attachmentList;
-       ui:orientation 3; ui:ordered true;
-       ui:subject &lt;#it&gt;.
-     &lt;#it&gt;
-       trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-       # Remove the middle tab
-       &lt;#tabs&gt; a ui:Tabs;
-         ui:predicate trip:attachmentList;
-         ui:orientation 3; ui:ordered true;
-         ui:subject &lt;#it&gt;.
-       &lt;#it&gt;
-         trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-        #  Add three more in the middle
-        &lt;#tabs&gt; a ui:Tabs;
-          ui:predicate trip:attachmentList;
-          ui:orientation 3; ui:ordered true;
-          ui:subject &lt;#it&gt;.
-        &lt;#it&gt;
-          trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;http://bbc.co.uk/&gt;  &lt;http://cbc.ca/&gt;  &lt;http://dbp.de/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-         #  Add three more in the middle
-         &lt;#tabs&gt; a ui:Tabs;
-           ui:predicate trip:attachmentList;
-           ui:orientation 3; ui:ordered true;
-           ui:subject &lt;#it&gt;.
-         &lt;#it&gt;
-           trip:attachmentList ( &lt;http://aclu.org/&gt;  &lt;http://bbc.co.uk/&gt;  &lt;http://cbc.ca/&gt;  &lt;http://dbp.de/&gt;  &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-          #  Add one more on each end
-          &lt;#tabs&gt; a ui:Tabs;
-            ui:predicate trip:attachmentList;
-            ui:orientation 3; ui:ordered true;
-            ui:subject &lt;#it&gt;.
-          &lt;#it&gt;
-            trip:attachmentList ( &lt;http://acm.org/&gt;  &lt;http://aclu.org/&gt;
-            &lt;http://bbc.co.uk/&gt;  &lt;http://cbc.ca/&gt;  &lt;http://dbp.de/&gt;  &lt;https://webfoundation.org/&gt;
-            &lt;http://www.zenith.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-           #  Reverse the list
-           &lt;#tabs&gt; a ui:Tabs;
-             ui:predicate trip:attachmentList;
-             ui:orientation 3; ui:ordered true;
-             ui:subject &lt;#it&gt;.
-           &lt;#it&gt;
-             trip:attachmentList (
-             &lt;http://www.zenith.org/&gt;
-             &lt;https://webfoundation.org/&gt;
-             &lt;http://dbp.de/&gt;
-             &lt;http://cbc.ca/&gt;
-             &lt;http://bbc.co.uk/&gt;
-             &lt;http://aclu.org/&gt;
-             &lt;http://acm.org/&gt;
-              ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-
-        <tr>
-          <td class='input'>
-            <pre>
-         # Remove all but one
-         &lt;#tabs&gt; a ui:Tabs;
-           ui:predicate trip:attachmentList;
-           ui:orientation 3; ui:ordered true;
-           ui:subject &lt;#it&gt;.
-         &lt;#it&gt;
-           trip:attachmentList ( &lt;https://webfoundation.org/&gt; ) .
-
-</pre>
-          </td>
-
-          <td class='output'></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 </body>
 </html>
