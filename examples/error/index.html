@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset='UTF-8'>
+    <title>solid-ui UI.widgets.error examples page</title>
+    <script type="text/javascript" src="../../lib/webpack-bundle.js"></script>
+    <script>
+      function showSource(widgetName) {
+        const scriptText = document.getElementById(`script-${widgetName}`).innerText
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;")
+        document.getElementById(`viewSource-${widgetName}`).innerHTML = scriptText
+    }
+    </script>
+  </head>
+<body>
+ <h2 id="errorMessageBlock"><a href="#errorMessageBlock">errorMessageBlock</a></h2>
+  <script id="script-errorMessageBlock">
+    window.addEventListener('DOMContentLoaded', (event) => {
+      const result = UI.widgets.errorMessageBlock(document, 'my error message', '#f0f')
+      document.getElementById('div-errorMessageBlock').appendChild(result)
+    })
+  </script>
+  <pre id="viewSource-errorMessageBlock"></pre><script>showSource('errorMessageBlock')</script>
+  <div id="div-errorMessageBlock"></div>
+</body>
+</html>

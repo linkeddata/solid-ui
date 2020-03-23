@@ -26,9 +26,10 @@ import solidAuthClient from 'solid-auth-client'
 import ns from '../ns.js'
 import kb from '../store.js'
 import utils from '../utils.js'
-import log from '../log.js'
+import { alert } from '../log'
 import { AppDetails, AuthenticationContext } from './types'
 import { PaneDefinition } from 'pane-registry'
+import * as debug from '../debug'
 
 export { solidAuthClient }
 
@@ -122,7 +123,7 @@ export function logIn (context: AuthenticationContext): Promise<AuthenticationCo
       // Already logged in?
       if (webId) {
         context.me = $rdf.sym(webId as string)
-        console.log(`logIn: Already logged in as ${context.me}`)
+        debug.log(`logIn: Already logged in as ${context.me}`)
         return resolve(context)
       }
       if (!context.div || !context.dom) {
@@ -209,7 +210,7 @@ export function logInLoadPreferences (context: AuthenticationContext): Promise<A
               widgets.errorMessageBlock(context.dom, message)
             )
           }
-          console.log(message)
+          debug.log(message)
           reject(new Error(message))
         }
 
@@ -239,7 +240,7 @@ export function logInLoadPreferences (context: AuthenticationContext): Promise<A
             // Really important to look at why
             const status = err.status
             const message = err.message
-            console.log(
+            debug.log(
               `HTTP status ${status} for preference file ${preferencesFile}`
             )
             let m2
@@ -253,7 +254,7 @@ export function logInLoadPreferences (context: AuthenticationContext): Promise<A
                 return resolve(context)
               }
               m2 = 'You are not authorized to read your preference file. This may be because you are using an untrusted web app.'
-              console.warn(m2)
+              debug.warn(m2)
             } else if (status === 404) {
               if (
                 confirm(`You do not currently have a preference file. OK for me to create an empty one? ${preferencesFile}`)
@@ -342,7 +343,7 @@ async function loadIndex (
         return context
       }
     } else {
-      console.log(
+      debug.log(
         'We know your preference file is not available, so we are not bothering with private type indexes.'
       )
     }
@@ -398,11 +399,11 @@ async function ensureOneTypeIndex (context: AuthenticationContext, isPublic: boo
     let newIndex
     if (context.index[visibility].length === 0) {
       newIndex = $rdf.sym(`${relevant.dir().uri + visibility}TypeIndex.ttl`)
-      console.log(`Linking to new fresh type index ${newIndex}`)
+      debug.log(`Linking to new fresh type index ${newIndex}`)
       if (!confirm(`OK to create a new empty index file at ${newIndex}, overwriting anything that is now there?`)) {
         throw new Error('cancelled by user')
       }
-      console.log(`Linking to new fresh type index ${newIndex}`)
+      debug.log(`Linking to new fresh type index ${newIndex}`)
       const addMe = [
         $rdf.st(context.me, ns.solid(`${visibility}TypeIndex`), newIndex, relevant)
       ]
@@ -414,7 +415,7 @@ async function ensureOneTypeIndex (context: AuthenticationContext, isPublic: boo
         return context
       }
 
-      console.log(`Creating new fresh type index file${newIndex}`)
+      debug.log(`Creating new fresh type index file${newIndex}`)
       await putIndex(newIndex)
       context.index[visibility].push(newIndex) // @@ wait
     } else {
@@ -431,7 +432,7 @@ async function ensureOneTypeIndex (context: AuthenticationContext, isPublic: boo
   try {
     await loadOneTypeIndex(context, isPublic)
     if (context.index) {
-      console.log(
+      debug.log(
         `ensureOneTypeIndex: Type index exists already ${isPublic}`
           ? context.index.public[0]
           : context.index.private[0]
@@ -493,7 +494,7 @@ export async function findAppInstances (
     await fetcher.load(containers)
   } catch (err) {
     const e = new Error(`[FAI] Unable to load containers${err}`)
-    console.log(e) // complain
+    debug.log(e) // complain
     widgets.complain(context, `Error looking for ${utils.label(theClass)}:  ${err}`)
     // but then ignore it
     // throw new Error(e)
@@ -552,7 +553,7 @@ export async function registerInTypeIndex (
   try {
     await updatePromise(kb.updater, [], ins)
   } catch (e) {
-    console.log(e)
+    debug.log(e)
     alert(e)
   }
   return context
@@ -639,7 +640,7 @@ export function registrationControl (
         msg = `registrationControl: Type indexes not available: ${e}`
         context.div.appendChild(widgets.errorMessageBlock(context.dom, e))
       }
-      console.log(msg)
+      debug.log(msg)
     }
     )
     .catch(function (e) {
@@ -647,7 +648,7 @@ export function registrationControl (
       if (context.div) {
         context.div.appendChild(widgets.errorMessageBlock(context.dom, e))
       }
-      console.log(msg)
+      debug.log(msg)
     })
 }
 
@@ -702,9 +703,9 @@ export function registrationList (context: AuthenticationContext, options: {
         deleteFunction: function (_x) {
           kb.updater.update([statement], [], function (uri, ok, errorBody) {
             if (ok) {
-              console.log(`Removed from index: ${statement.subject}`)
+              debug.log(`Removed from index: ${statement.subject}`)
             } else {
-              console.log(`Error: Cannot delete ${statement}: ${errorBody}`)
+              debug.log(`Error: Cannot delete ${statement}: ${errorBody}`)
             }
           })
         }
@@ -865,7 +866,7 @@ export function offlineTestID (): $rdf.NamedNode | null {
     $SolidTestEnvironment.username
   ) {
     // Test setup
-    console.log('Assuming the user is ' + $SolidTestEnvironment.username)
+    debug.log('Assuming the user is ' + $SolidTestEnvironment.username)
     return $rdf.sym($SolidTestEnvironment.username)
   }
 
@@ -880,7 +881,7 @@ export function offlineTestID (): $rdf.NamedNode | null {
     if (!id) return null
     /* me = kb.any(subject, ns.acl('owner')); // when testing on plane with no WebID
      */
-    console.log('Assuming user is ' + id)
+    debug.log('Assuming user is ' + id)
     return $rdf.sym(id)
   }
   return null
@@ -912,7 +913,7 @@ function signInOrSignUpBox (
   // @@ TODO Remove the need to cast HTML element to any
   const box: any = dom.createElement('div')
   const magicClassName = 'SolidSignInOrSignUpBox'
-  console.log('widgets.signInOrSignUpBox')
+  debug.log('widgets.signInOrSignUpBox')
   box.setUserCallback = setUserCallback
   box.setAttribute('class', magicClassName)
   box.style = 'display:flex;'
@@ -931,7 +932,7 @@ function signInOrSignUpBox (
       const webIdURI = session.webId
       // setUserCallback(webIdURI)
       const divs = dom.getElementsByClassName(magicClassName)
-      console.log(`Logged in, ${divs.length} panels to be serviced`)
+      debug.log(`Logged in, ${divs.length} panels to be serviced`)
       // At the same time, satisfy all the other login boxes
       for (let i = 0; i < divs.length; i++) {
         const div: any = divs[i]
@@ -944,7 +945,7 @@ function signInOrSignUpBox (
               parent.removeChild(div)
             }
           } catch (e) {
-            console.log(`## Error satisfying login box: ${e}`)
+            debug.log(`## Error satisfying login box: ${e}`)
             div.appendChild(widgets.errorMessageBlock(dom, e))
           }
         }
@@ -962,7 +963,7 @@ function signInOrSignUpBox (
   signupButton.addEventListener('click', function (_event) {
     const signupMgr = new SolidTls.Signup()
     signupMgr.signup().then(function (uri) {
-      console.log('signInOrSignUpBox signed up ' + uri)
+      debug.log('signInOrSignUpBox signed up ' + uri)
       setUserCallback(uri)
     })
   }, false)
@@ -1012,7 +1013,7 @@ export function checkUser<T> (
     .currentSession()
     .then(webIdFromSession)
     .catch(err => {
-      console.log('Error fetching currentSession:', err)
+      debug.log('Error fetching currentSession:', err)
     })
     .then(webId => {
       // if (webId.startsWith('dns:')) {  // legacy rww.io pseudo-users
@@ -1021,7 +1022,7 @@ export function checkUser<T> (
       const me = saveUser(webId)
 
       if (me) {
-        console.log(`(Logged in as ${me} by authentication)`)
+        debug.log(`(Logged in as ${me} by authentication)`)
       }
 
       return setUserCallback ? setUserCallback(me) : me
@@ -1069,7 +1070,7 @@ export function loginStatusBox (
         const message = `Your WebID was ${me}. It has been forgotten.`
         me = null
         try {
-          log.alert(message)
+          alert(message)
         } catch (e) {
           window.alert(message)
         }
@@ -1189,7 +1190,7 @@ export function selectWorkspace (
       newBase = newBase.value
     }
     if (newBase.slice(-1) !== '/') {
-      console.log(`${appPathSegment}: No / at end of uriPrefix ${newBase}`) // @@ paramater?
+      debug.log(`${appPathSegment}: No / at end of uriPrefix ${newBase}`) // @@ paramater?
       newBase = `${newBase}/`
     }
     const now = new Date()
@@ -1417,7 +1418,7 @@ export async function getUserRoles (): Promise<Array<$rdf.NamedNode>> {
     }
     return kb.each(me, ns.rdf('type'), null, preferencesFile.doc())
   } catch (error) {
-    console.warn('Unable to fetch your preferences - this was the error: ', error)
+    debug.warn('Unable to fetch your preferences - this was the error: ', error)
   }
   return []
 }

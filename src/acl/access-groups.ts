@@ -11,6 +11,7 @@ import ns from '../ns'
 import { AccessController } from './access-controller'
 import { AgentMapMap, ComboList, PartialAgentTriple } from './types'
 import { AddAgentButtons } from './add-agent-buttons'
+import * as debug from '../debug'
 
 const ACL = ns.acl
 
@@ -175,18 +176,18 @@ export class AccessGroups {
     const agent = findAgent(uri, this.store) // eg 'agent', 'origin', agentClass'
     const thing = sym(uri)
     if (!agent && !secondAttempt) {
-      console.log(`   Not obvious: looking up dropped thing ${thing}`)
+      debug.log(`   Not obvious: looking up dropped thing ${thing}`)
       try {
         await (this.store as any).fetcher.load(thing.doc())
       } catch (error) {
         const message = `Ignore error looking up dropped thing: ${error}`
-        console.error(message)
+        debug.error(message)
         return Promise.reject(new Error(message))
       }
       return this.handleDroppedUri(uri, combo, true)
     } else if (!agent) {
       const error = `   Error: Drop fails to drop appropriate thing! ${uri}`
-      console.error(error)
+      debug.error(error)
       return Promise.reject(new Error(error))
     }
     this.setACLCombo(combo, uri, agent, this.controller.subject)
@@ -198,7 +199,7 @@ export class AccessGroups {
     }
     this.removeAgentFromCombos(uri) // Combos are mutually distinct
     this.byCombo[combo].push([res.pred, res.obj.uri])
-    console.log(`ACL: setting access to ${subject} by ${res.pred}: ${res.obj}`)
+    debug.log(`ACL: setting access to ${subject} by ${res.pred}: ${res.obj}`)
   }
 
   private removeAgentFromCombos (uri: string): void {
@@ -242,7 +243,7 @@ function findAgent (uri, kb): PartialAgentTriple | null {
   const obj = sym(uri)
   const types = kb.findTypeURIs(obj)
   for (const ty in types) {
-    console.log('    drop object type includes: ' + ty)
+    debug.log('    drop object type includes: ' + ty)
   }
   // An Origin URI is one like https://fred.github.io eith no trailing slash
   if (uri.startsWith('http') && uri.split('/').length === 3) {
@@ -256,7 +257,7 @@ function findAgent (uri, kb): PartialAgentTriple | null {
     uri.endsWith('/')
   ) {
     // there  IS third slash
-    console.log('Assuming final slash on dragged origin URI was unintended!')
+    debug.log('Assuming final slash on dragged origin URI was unintended!')
     return { pred: 'origin', obj: sym(uri.slice(0, -1)) } // Fix a URI where the drag and drop system has added a spurious slash
   }
 
@@ -288,6 +289,6 @@ function findAgent (uri, kb): PartialAgentTriple | null {
   if (ns.solid('AppProviderClass').uri in types) {
     return { pred: 'originClass', obj: obj }
   }
-  console.log('    Triage fails for ' + uri)
+  debug.log('    Triage fails for ' + uri)
   return null
 }

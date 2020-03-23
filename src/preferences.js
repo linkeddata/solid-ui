@@ -2,6 +2,9 @@
 //                  Solid-UI temporary preferences
 //                  ==============================
 //
+
+import * as debug from './debug'
+
 const kb = require('./store')
 const ns = require('./ns')
 const authn = require('./authn/authn')
@@ -19,7 +22,7 @@ module.exports = {
   },
   set: function (k, v) {
     if (typeof v !== 'string') {
-      console.log('Non-string value of preference ' + k + ': ' + v)
+      debug.log('Non-string value of preference ' + k + ': ' + v)
       throw new Error('Non-string value of preference ' + k + ': ' + v)
     }
     this.value[k] = v
@@ -40,7 +43,7 @@ function recordSharedPreferences (subject, context) {
       const ins = [
         $rdf.st(subject, ns.ui('sharedPreferences'), sp, subject.doc())
       ]
-      console.log('Creating shared preferences ' + sp)
+      debug.log('Creating shared preferences ' + sp)
       kb.updater.update([], ins, function (uri, ok, errorMessage) {
         if (!ok) {
           reject(new Error('Error creating shared prefs: ' + errorMessage))
@@ -63,7 +66,7 @@ function recordPersonalDefaults (theClass, context) {
     authn.logInLoadPreferences(context).then(
       context => {
         if (!context.preferencesFile) {
-          console.log(
+          debug.log(
             'Not doing private class preferences as no access to preferences file. ' +
               context.preferencesFileError
           )

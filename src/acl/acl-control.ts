@@ -13,6 +13,7 @@ import { DataBrowserContext } from 'pane-registry'
 import { AccessController } from './access-controller'
 import { getClasses } from '../jss'
 import { styles } from './styles'
+import * as debug from '../debug'
 
 /**
  * See https://coshx.com/preventing-drag-and-drop-disasters-with-a-chrome-userscript
@@ -27,7 +28,7 @@ import { styles } from './styles'
  * @returns void
  */
 export function preventBrowserDropEvents (document: HTMLDocument): void {
-  console.log('preventBrowserDropEvents called.')
+  debug.log('preventBrowserDropEvents called.')
   const global: any = window
   if (typeof global !== 'undefined') {
     if (global.preventBrowserDropEventsDone) return
@@ -49,7 +50,7 @@ export function preventBrowserDropEvents (document: HTMLDocument): void {
       ) {
         e.stopPropagation()
         e.preventDefault()
-        console.log(
+        debug.log(
           '@@@@ document-level DROP suppressed: ' + e.dataTransfer.dropEffect
         )
       }
@@ -180,7 +181,7 @@ async function loadController (
         return resolve(getController(prospectiveDefaultHolder))
       } catch (error) {
         // No need to show this error in status, but good to warn about it in console
-        console.warn(error)
+        debug.warn(error)
       }
     }
     return resolve(getController())

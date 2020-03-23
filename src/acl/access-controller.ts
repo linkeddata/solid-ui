@@ -9,6 +9,7 @@ import { AccessGroups } from './access-groups'
 import { DataBrowserContext } from 'pane-registry'
 import { shortNameForFolder } from './acl-control'
 import utils from '../utils.js'
+import * as debug from '../debug'
 
 /**
  * Rendered HTML component used in the databrowser's Sharing pane.
@@ -161,7 +162,7 @@ export class AccessController {
   private async addAcls (): Promise<void> {
     if (!this.defaultHolder || !this.defaultACLDoc) {
       const message = 'Unable to find defaults to copy'
-      console.error(message)
+      debug.error(message)
       return Promise.reject(message)
     }
     const aclGraph = adoptACLDefault(this.targetDoc, this.targetACLDoc, this.defaultHolder, this.defaultACLDoc)
@@ -172,7 +173,7 @@ export class AccessController {
       return Promise.resolve()
     } catch (error) {
       const message = ` Error writing back access control file! ${error}`
-      console.error(message)
+      debug.error(message)
       return Promise.reject(message)
     }
   }
@@ -190,11 +191,11 @@ export class AccessController {
         this.prospectiveDefaultHolder = await getProspectiveHolder(this.targetDoc.uri)
       } catch (error) {
         // No need to show this error in status, but good to warn about it in console
-        console.warn(error)
+        debug.warn(error)
       }
     } catch (error) {
       const message = `Error deleting access control file: ${this.targetACLDoc}: ${error}`
-      console.error(message)
+      debug.error(message)
       return Promise.reject(message)
     }
   }
@@ -208,7 +209,7 @@ export class AccessController {
     } catch (error) {
       this.defaultsCombo = fallbackCombo
       this.defaultsDiffer = true
-      console.error(error)
+      debug.error(error)
       return Promise.reject(error)
     }
   }
@@ -242,7 +243,7 @@ export class AccessController {
           this.defaultsCombo.store = this.store
         }
         this.defaultsDiffer = !!this.defaultsCombo && !sameACL(this.mainCombo.aclMap, this.defaultsCombo.aclMap)
-        console.log('ACL modification: success!')
+        debug.log('ACL modification: success!')
         resolve()
       }
     ))

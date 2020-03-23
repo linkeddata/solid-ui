@@ -11,6 +11,7 @@ import { logInLoadProfile } from '../authn/authn'
 import utils from '../utils'
 import { NamedNode } from 'rdflib'
 import { AuthenticationContext } from '../authn/types'
+import * as debug from '../debug'
 
 /**
  * Renders the Sharing pane's "+" button and the menus behind it,
@@ -227,7 +228,7 @@ export class AddAgentButtons {
       return Promise.reject(new Error('Not a http URI'))
     }
     // @@ check it actually is a person and has an owner who agrees they own it
-    console.log(`Adding to ACL person: ${name}`)
+    debug.log(`Adding to ACL person: ${name}`)
     await this.groupList.addNewURI(name)
     this.toggleBar()
   }
@@ -241,7 +242,7 @@ export class AddAgentButtons {
       return Promise.reject(new Error('Not a http URI'))
     }
     // @@ check it actually is a group and has an owner who agrees they own it
-    console.log('Adding to ACL group: ' + name)
+    debug.log('Adding to ACL group: ' + name)
     await this.groupList.addNewURI(name)
     this.toggleBar()
   }
@@ -259,7 +260,7 @@ export class AddAgentButtons {
       return Promise.reject(new Error('Not a http URI'))
     }
     // @@ check it actually is a bot and has an owner who agrees they own it
-    console.log('Adding to ACL bot: ' + name)
+    debug.log('Adding to ACL bot: ' + name)
     await this.groupList.addNewURI(name)
     this.toggleBar()
   }
@@ -273,7 +274,7 @@ export class AddAgentButtons {
       return Promise.reject(new Error('Not a domain name'))
     }
     const origin = 'https://' + name
-    console.log('Adding to ACL origin: ' + origin)
+    debug.log('Adding to ACL origin: ' + origin)
     this.toggleBar()
     return origin
   }

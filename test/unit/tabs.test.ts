@@ -42,7 +42,7 @@ describe('tabWidget', () => {
       })
     })
 
-    afterAll(() => clearStore())
+    afterAll(clearStore)
 
     it('creates an element', () => {
       expect(tabWidgetElement.tagName).toEqual('DIV')
@@ -147,7 +147,7 @@ describe('tabWidget', () => {
   })
 
   describe('option ordered', () => {
-    afterAll(() => clearStore())
+    afterAll(clearStore)
 
     it('allows for tabs to be fetched from triples instead of a collection', () => {
       const predicate = meeting('toolList')

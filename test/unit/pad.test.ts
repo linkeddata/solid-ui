@@ -160,7 +160,7 @@ it.skip('only here to make tests run', () => null)
 //         style="padding: 1em; overflow: auto; resize: horizontal; min-width: 40em;"
 //       />
 //     `)
-//     expect(console.log).toBeCalledWith(
+//     expect(debug.log).toBeCalledWith(
 //       'Warning: must be logged in for pad to be edited'
 //     )
 //   })

@@ -3,6 +3,8 @@
  * @packageDocumentation
  */
 
+import * as debug from '../debug'
+
 const kb = require('../store.js')
 const ns = require('../ns.js')
 const $rdf = require('rdflib')
@@ -22,7 +24,7 @@ module.exports = class DateFolder {
    * @returns: <NamedNode> - document
    */
   leafDocumentFromDate (date) {
-    // console.log('incoming date: ' + date)
+    // debug.log('incoming date: ' + date)
     const isoDate = date.toISOString() // Like "2018-05-07T17:42:46.576Z"
     var path = isoDate.split('T')[0].replace(/-/g, '/') //  Like "2018/05/07"
     path = this.root.dir().uri + path + '/' + this.leafFileName
@@ -37,7 +39,7 @@ module.exports = class DateFolder {
     // let date = new Date(str + 'Z') // GMT - but fails in FF - invalid format :-(
     var date = new Date(str) // not explicitly UTC but is assumed so in spec
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse
-    console.log('Date for ' + doc + ':' + date.toISOString())
+    debug.log('Date for ' + doc + ':' + date.toISOString())
     return date
   }
 
@@ -76,7 +78,7 @@ module.exports = class DateFolder {
         }
         return null
       }
-      // console.log('  previousPeriod level' + level + ' file ' + file)
+      // debug.log('  previousPeriod level' + level + ' file ' + file)
       const parent = file.dir()
       await kb.fetcher.load(parent)
       var siblings = kb.each(parent, ns.ldp('contains'))
@@ -116,7 +118,7 @@ module.exports = class DateFolder {
         if (!'0123456789'.includes(tail[0])) return false // not numeric
         return true
       }
-      console.log('            parent ' + parent)
+      debug.log('            parent ' + parent)
       delete folderFetcher.requested[parent.uri]
       // try {
       await folderFetcher.load(parent, { force: true }) // Force fetch as will have changed
@@ -147,7 +149,7 @@ module.exports = class DateFolder {
     if (leafObjects.length === 0) {
       const msg =
         '  INCONSISTENCY -- no chat leafObject in file ' + leafDocument
-      console.trace(msg)
+      debug.trace(msg)
       throw new Error(msg)
     }
     const sortMe = leafObjects.map(leafObject => [
@@ -156,7 +158,7 @@ module.exports = class DateFolder {
     ])
     sortMe.sort()
     if (backwards) sortMe.reverse()
-    console.log(
+    debug.log(
       (backwards ? 'Latest' : 'Earliest') + ' leafObject is ' + sortMe[0][1]
     )
     return sortMe[0][1]

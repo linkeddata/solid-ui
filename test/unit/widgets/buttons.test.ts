@@ -183,7 +183,7 @@ describe('findImage', () => {
   const subject = sym('https://domain.tld/#test')
   const imageObject = sym('https://domain.tld/#image')
 
-  afterEach(() => clearStore())
+  afterEach(clearStore)
 
   it('exists', () => {
     expect(findImage).toBeInstanceOf(Function)

@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`errorMessageBlock creates an error message div 1`] = `
+<div
+  style="margin: 0.1em; padding: 0.5em; border: 0.05em solid gray; background-color: #fee; color:black;"
+>
+  my error message
+</div>
+`;
+
+exports[`errorMessageBlock escapes the HTML 1`] = `
+<div
+  style="margin: 0.1em; padding: 0.5em; border: 0.05em solid gray; background-color: #fee; color:black;"
+>
+  my &lt;script&gt; kiddie &lt;/script&gt; message
+</div>
+`;
+
+exports[`errorMessageBlock sets the background color 1`] = `
+<div
+  style="margin: 0.1em; padding: 0.5em; border: 0.05em solid gray; background-color: #0ff; color:black;"
+>
+  my colored message
+</div>
+`;

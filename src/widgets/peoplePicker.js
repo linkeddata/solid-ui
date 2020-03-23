@@ -12,6 +12,8 @@
 import escape from 'escape-html'
 import uuid from 'node-uuid'
 import * as rdf from 'rdflib'
+import * as debug from '../debug'
+
 // const webClient = require('solid-web-client')(rdf)
 
 import { makeDropTarget } from './dragAndDrop'
@@ -170,7 +172,7 @@ export class PeoplePicker {
     return Promise.all(patchPromises)
       .then(() => ({ group }))
       .catch(err => {
-        console.log('Could not create new group.  PATCH failed ' + err)
+        debug.log('Could not create new group.  PATCH failed ' + err)
         throw new Error(
           `Couldn't create new group.  PATCH failed for (${
           err.xhr ? err.xhr.responseURL : ''

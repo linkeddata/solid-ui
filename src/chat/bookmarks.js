@@ -4,10 +4,12 @@
  */
 
 /* global alert confirm */
+
+import * as debug from '../debug'
+
 const UI = {
   authn: require('../authn/authn'),
   icons: require('../iconBase'),
-  log: require('../log'),
   ns: require('../ns'),
   media: require('../media-capture'),
   pad: require('../pad'),
@@ -36,13 +38,13 @@ function createIfNotExists (doc) {
   return new Promise(function (resolve, reject) {
     kb.fetcher.load(doc).then(
       response => {
-        console.log('createIfNotExists doc exists, all good ' + doc)
+        debug.log('createIfNotExists doc exists, all good ' + doc)
         // kb.fetcher.webOperation('HEAD', doc.uri).then(response => {
         resolve(response)
       },
       err => {
         if (err.response.status === 404) {
-          console.log(
+          debug.log(
             'createIfNotExists doc does NOT exist, will create... ' + doc
           )
 
@@ -55,16 +57,16 @@ function createIfNotExists (doc) {
               response => {
                 // fetcher.requested[doc.uri] = 'done' // do not need to read ??  but no headers
                 delete kb.fetcher.requested[doc.uri] // delete cached 404 error
-                console.log('createIfNotExists doc created ok ' + doc)
+                debug.log('createIfNotExists doc created ok ' + doc)
                 resolve(response)
               },
               err => {
-                console.log('createIfNotExists doc FAILED: ' + doc + ': ' + err)
+                debug.log('createIfNotExists doc FAILED: ' + doc + ': ' + err)
                 reject(err)
               }
             )
         } else {
-          console.log(
+          debug.log(
             'createIfNotExists doc load error NOT 404:  ' + doc + ': ' + err
           )
           reject(err)
@@ -111,7 +113,7 @@ export async function findBookmarkDocument (userContext) {
         userContext.publicProfile.dir().uri + fileTail
       )
       try {
-        console.log('Creating new bookmark file ' + newBookmarkFile)
+        debug.log('Creating new bookmark file ' + newBookmarkFile)
         await createIfNotExists(newBookmarkFile)
       } catch (e) {
         alert.error("Can't make fresh bookmark file:" + e)
@@ -189,16 +191,16 @@ export async function toggleBookmark (userContext, target, bookmarkButton) {
       try {
         await updatePromise(kb.connectedStatements(bookmarks[i]), [])
         bookmarkButton.style.backgroundColor = 'white'
-        console.log('Bookmark deleted: ' + bookmarks[i])
+        debug.log('Bookmark deleted: ' + bookmarks[i])
       } catch (e) {
-        console.error('Cant delete bookmark:' + e)
+        debug.error('Cant delete bookmark:' + e)
         alert('Cant delete bookmark:' + e)
       }
     }
   } else {
     const bookmark = await addBookmark(userContext, target)
     bookmarkButton.style.backgroundColor = 'yellow'
-    console.log('Bookmark added: ' + bookmark)
+    debug.log('Bookmark added: ' + bookmark)
   }
 }
 

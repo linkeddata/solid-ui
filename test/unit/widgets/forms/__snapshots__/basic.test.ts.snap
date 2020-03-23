@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`basicField adds the basic field to the container, if provided 1`] = `
+<div>
+  <tr>
+    <td
+      class="formFieldName"
+      style="  vertical-align: middle;"
+    >
+      <a
+        href="http://example.com/#some-property"
+        style="color: #3B5998; text-decoration: none;"
+      >
+        Some property
+      </a>
+    </td>
+    <td
+      class="formFieldValue"
+    >
+      <input
+        maxlength="4096"
+        size="20"
+        style="background-color: #eef; padding: 0.5em;  border: .05em solid #88c;  border-radius:0.2em; font-size: 100%; margin:0.2em; "
+        type="text"
+      />
+    </td>
+  </tr>
+</div>
+`;
+
+exports[`basicField creates a basic field 1`] = `
+<tr>
+  <td
+    class="formFieldName"
+    style="  vertical-align: middle;"
+  >
+    <a
+      href="http://example.com/#some-property"
+      style="color: #3B5998; text-decoration: none;"
+    >
+      Some property
+    </a>
+  </td>
+  <td
+    class="formFieldValue"
+  >
+    <input
+      maxlength="4096"
+      size="20"
+      style="background-color: #eef; padding: 0.5em;  border: .05em solid #88c;  border-radius:0.2em; font-size: 100%; margin:0.2em; "
+      type="text"
+    />
+  </td>
+</tr>
+`;
+
+exports[`basicField shows error if no property given 1`] = `
+<tr>
+  <td
+    class="formFieldName"
+    style="  vertical-align: middle;"
+  />
+  <td
+    class="formFieldValue"
+  />
+  Error: No property given for text field: &lt;http://example.com/#form&gt;
+</tr>
+`;

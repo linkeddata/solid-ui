@@ -10,6 +10,7 @@ import ns from '../ns'
 import kb from '../store.js'
 import utils from '../utils'
 import { AgentMapMap, ComboList } from './types'
+import * as debug from '../debug'
 
 /**
  * Take the "default" ACL and convert it into the equivlent ACL
@@ -373,7 +374,7 @@ export function fixIndividualCardACL (person: $rdf.NamedNode, log: Function, cal
  * This function is used by [[fixIndividualCardACL]]
  */
 export function fixIndividualACL (item: $rdf.NamedNode, subjects: Array<$rdf.NamedNode>, log: Function, callbackFunction: Function): void {
-  log = log || console.log
+  log = log || debug.log
   const doc = item.doc()
   getACLorDefault(doc, function (
     ok,

@@ -2,9 +2,10 @@
  *
  */
 /* global confirm */
+import * as debug from './debug'
+
 const UI = {
   icons: require('./iconBase'),
-  log: require('./log'),
   ns: require('./ns'),
   pad: require('./'),
   rdf: require('rdflib'),
@@ -23,14 +24,14 @@ function deleteRecursive (kb, folder) {
         if (kb.holds(file, ns.rdf('type'), ns.ldp('BasicContainer'))) {
           return deleteRecursive(kb, file)
         } else {
-          console.log('deleteRecirsive file: ' + file)
+          debug.log('deleteRecirsive file: ' + file)
           if (!confirm(' Really DELETE File ' + file)) {
             throw new Error('User aborted delete file')
           }
           return kb.fetcher.webOperation('DELETE', file.uri)
         }
       })
-      console.log('deleteRecirsive folder: ' + folder)
+      debug.log('deleteRecirsive folder: ' + folder)
       if (!confirm(' Really DELETE folder ' + folder)) {
         throw new Error('User aborted delete file')
       }
@@ -111,7 +112,7 @@ module.exports.deleteFolder = function (folder, store, dom) {
     'click',
     function (_event) {
       deleteThem(folder).then(() => {
-        console.log('All deleted.')
+        debug.log('All deleted.')
       })
     },
     false
@@ -128,7 +129,7 @@ module.exports.deleteFolder = function (folder, store, dom) {
   }) // Count files
     .then(() => {
       const msg = ' Files to delete: ' + count
-      console.log(msg)
+      debug.log(msg)
       p.textContent += msg
     })
 

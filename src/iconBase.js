@@ -1,6 +1,8 @@
 /* global $SolidTestEnvironment */
 // Works in FF extension - what about browserify??
 
+import * as debug from './debug'
+
 if (module.scriptURI) {
   // FF extension
   module.exports.iconBase =
@@ -26,4 +28,4 @@ if (module.scriptURI) {
     module.exports.originalIconBase = iconsOnGithub + '/originalIcons/'
   }
 }
-console.log('   Icon base is: ' + module.exports.iconBase)
+debug.log('   Icon base is: ' + module.exports.iconBase)

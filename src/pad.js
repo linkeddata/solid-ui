@@ -5,12 +5,13 @@
 /** @module UI.pad
  */
 
+import * as debug from './debug'
+
 const $rdf = require('rdflib')
 var padModule = (module.exports = {})
 var UI = {
   authn: require('./authn/authn'),
   icons: require('./iconBase'),
-  log: require('./log'),
   ns: require('./ns'),
   pad: padModule,
   rdf: $rdf,
@@ -312,7 +313,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
   }
 
   var complain = function (message, upstream) {
-    console.log(message)
+    debug.log(message)
     if (options.statusArea) {
       ;(upstream ? upstreamStatus : downstreamStatus).appendChild(
         UI.widgets.errorMessageBlock(dom, message, 'pink')
@@ -369,7 +370,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
     var next = kb.any(chunk, PAD('next'))
     if (prev.sameTerm(subject) && next.sameTerm(subject)) {
       // Last one
-      console.log("You can't delete the only line.")
+      debug.log("You can't delete the only line.")
       return
     }
 
@@ -378,14 +379,14 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
       .concat(kb.statementsMatching(undefined, undefined, chunk, padDoc))
     var ins = [$rdf.st(prev, PAD('next'), next, padDoc)]
     var label = chunk.uri.slice(-4)
-    console.log('Deleting line ' + label)
+    debug.log('Deleting line ' + label)
 
     updater.update(del, ins, function (uri, ok, errorMessage, response) {
       if (ok) {
         var row = part.parentNode
         var before = row.previousSibling
         row.parentNode.removeChild(row)
-        console.log('    deleted line ' + label + ' ok ' + part.value)
+        debug.log('    deleted line ' + label + ' ok ' + part.value)
         if (before && before.firstChild) {
           before.firstChild.focus()
         }
@@ -400,8 +401,8 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
           // updater.requestDownstreamAction(padDoc, reloadAndSync)
         }, 1000)
       } else {
-        console.log('    removePart FAILED ' + chunk + ': ' + errorMessage)
-        console.log("    removePart was deleteing :'" + del)
+        debug.log('    removePart FAILED ' + chunk + ': ' + errorMessage)
+        debug.log("    removePart was deleteing :'" + del)
         setPartStyle(part, 'color: black;  background-color: #fdd;') // failed
         const res = response ? response.status : ' [no response field] '
         complain('Error ' + res + ' saving changes: ' + errorMessage.true) // upstream,
@@ -418,7 +419,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
     var ins = $rdf.st(chunk, PAD('indent'), newIndent, padDoc)
     updater.update(del, ins, function (uri, ok, errorBody) {
       if (!ok) {
-        console.log(
+        debug.log(
           "Indent change FAILED '" +
             newIndent +
             "' for " +
@@ -467,7 +468,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
       switch (event.keyCode) {
         case 13: // Return
           var before = event.shiftKey
-          console.log('enter') // Shift-return inserts before -- only way to add to top of pad.
+          debug.log('enter') // Shift-return inserts before -- only way to add to top of pad.
           if (before) {
             queue = kb.any(undefined, PAD('next'), chunk)
             queueProperty = 'newlinesAfter'
@@ -478,16 +479,16 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
           queue[queueProperty] = queue[queueProperty] || 0
           queue[queueProperty] += 1
           if (queue[queueProperty] > 1) {
-            console.log('    queueing newline queue = ' + queue[queueProperty])
+            debug.log('    queueing newline queue = ' + queue[queueProperty])
             return
           }
-          console.log('    go ahead line before ' + queue[queueProperty])
+          debug.log('    go ahead line before ' + queue[queueProperty])
           newChunk(part, before) // was document.activeElement
           break
 
         case 8: // Delete
           if (part.value.length === 0) {
-            console.log(
+            debug.log(
               'Delete key line ' + chunk.uri.slice(-4) + ' state ' + part.state
             )
 
@@ -516,7 +517,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
           event.preventDefault() // default is to highlight next field
           break
         case 27: // ESC
-          console.log('escape')
+          debug.log('escape')
           updater.requestDownstreamAction(padDoc, reloadAndSync)
           event.preventDefault()
           break
@@ -561,7 +562,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
       }
       part.lastSent = newOne
 
-      console.log(
+      debug.log(
         ' Patch proposed to ' +
           chunk.uri.slice(-4) +
           " '" +
@@ -573,7 +574,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
       updater.update(del, ins, function (uri, ok, errorBody, xhr) {
         if (!ok) {
           // alert("clash " + errorBody);
-          console.log(
+          debug.log(
             '    patch FAILED ' +
               xhr.status +
               " for '" +
@@ -604,7 +605,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
         } else {
           clearStatus(true) // upstream
           setPartStyle(part) // synced
-          console.log("    Patch ok '" + old + "' -> '" + newOne + "' ")
+          debug.log("    Patch ok '" + old + "' -> '" + newOne + "' ")
 
           if (part.state === 4) {
             //  delete me
@@ -624,9 +625,9 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
     }
 
     part.addEventListener('input', function inputChangeListener (_event) {
-      // console.log("input changed "+part.value);
+      // debug.log("input changed "+part.value);
       setPartStyle(part, undefined, true) // grey out - not synced
-      console.log(
+      debug.log(
         'Input event state ' + part.state + " value '" + part.value + "'"
       )
       switch (part.state) {
@@ -671,7 +672,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
       addListeners(part, chunk)
     } else {
       setPartStyle(part, 'color: #222; background-color: #fff')
-      console.log("Note can't add listeners - not logged in")
+      debug.log("Note can't add listeners - not logged in")
     }
     return part
   }
@@ -685,7 +686,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
 
     if (ele) {
       if (ele.tagName.toLowerCase() !== 'input') {
-        console.log('return pressed when current document is: ' + ele.tagName)
+        debug.log('return pressed when current document is: ' + ele.tagName)
       }
       here = ele.subject
       indent = kb.any(here, PAD('indent'))
@@ -723,17 +724,17 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
       ins.push($rdf.st(chunk, PAD('indent'), indent, padDoc))
     }
 
-    console.log('    Fresh chunk ' + label + ' proposed')
+    debug.log('    Fresh chunk ' + label + ' proposed')
     updater.update(del, ins, function (uri, ok, errorBody, _xhr) {
       if (!ok) {
         // alert("Error writing new line " + label + ": " + errorBody);
-        console.log('    ERROR writing new line ' + label + ': ' + errorBody)
+        debug.log('    ERROR writing new line ' + label + ': ' + errorBody)
       } else {
         var newPart = newPartAfter(tr1, chunk, before)
         setPartStyle(newPart)
         newPart.focus() // Note this is delayed
         if (queueProperty) {
-          console.log(
+          debug.log(
             '    Fresh chunk ' +
               label +
               ' updated, queue = ' +
@@ -741,7 +742,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
           )
           queue[queueProperty] -= 1
           if (queue[queueProperty] > 0) {
-            console.log(
+            debug.log(
               '    Implementing queued newlines = ' + next.newLinesBefore
             )
             newChunk(newPart, before)
@@ -819,7 +820,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
       var msg =
         'Pad: Inconsistent data - NEXT pointers: ' +
         kb.each(subject, PAD('next')).length
-      console.log(msg)
+      debug.log(msg)
       if (options.statusAra) {
         options.statusArea.textContent += msg
       }
@@ -893,7 +894,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
   var reloading = false
 
   var checkAndSync = function () {
-    console.log('    reloaded OK')
+    debug.log('    reloaded OK')
     clearStatus()
     if (!consistencyCheck()) {
       complain('CONSITENCY CHECK FAILED')
@@ -904,13 +905,13 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
 
   var reloadAndSync = function () {
     if (reloading) {
-      console.log('   Already reloading - stop')
+      debug.log('   Already reloading - stop')
       return // once only needed
     }
     reloading = true
     var retryTimeout = 1000 // ms
     var tryReload = function () {
-      console.log('try reload - timeout = ' + retryTimeout)
+      debug.log('try reload - timeout = ' + retryTimeout)
       updater.reload(updater.store, padDoc, function (ok, message, xhr) {
         reloading = false
         if (ok) {
@@ -943,10 +944,10 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
   table.refresh = sync // Catch downward propagating refresh events
   table.reloadAndSync = reloadAndSync
 
-  if (!me) console.log('Warning: must be logged in for pad to be edited')
+  if (!me) debug.log('Warning: must be logged in for pad to be edited')
 
   if (exists) {
-    console.log('Existing pad.')
+    debug.log('Existing pad.')
     if (consistencyCheck()) {
       sync()
       if (kb.holds(subject, PAD('next'), subject)) {
@@ -954,11 +955,11 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
         newChunk() // require at least one line
       }
     } else {
-      console.log((table.textContent = 'Inconsistent data. Abort'))
+      debug.log((table.textContent = 'Inconsistent data. Abort'))
     }
   } else {
     // Make new pad
-    console.log('No pad exists - making new one.')
+    debug.log('No pad exists - making new one.')
     var insertables = [
       $rdf.st(subject, ns.rdf('type'), PAD('Notepad'), padDoc),
       $rdf.st(subject, ns.dc('author'), me, padDoc),
@@ -970,7 +971,7 @@ UI.pad.notepad = function (dom, padDoc, subject, me, options) {
       if (!ok) {
         complain(errorBody)
       } else {
-        console.log('Initial pad created')
+        debug.log('Initial pad created')
         newChunk() // Add a first chunck
         // getResults();
       }

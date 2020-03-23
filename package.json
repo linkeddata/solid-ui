@@ -85,7 +85,6 @@
     "jest": "^25.1.0",
     "jsdom": "^16.1.0",
     "lint-staged": "^10.0.0-1",
-    "prettier": "^1.19.1",
     "standard": "^14.3.1",
     "typedoc": "^0.16.9",
     "typescript": "^3.6.3",

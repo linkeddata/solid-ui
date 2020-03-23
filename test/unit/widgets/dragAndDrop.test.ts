@@ -24,7 +24,7 @@ describe('makeDropTarget', () => {
     const handler = () => {}
     makeDropTarget(element, handler, handler)
     const event = document.createEvent('HTMLEvents')
-    console.log(event)
+    // debug.log(event)
     event.initEvent('dragover', true, true)
     // event.dataTransfer = () => {}
     // element.dispatchEvent(event)

@@ -13,6 +13,8 @@
 // 2014 Core table widget moved into common/table.js - timbl
 //
 
+import * as debug from './debug'
+
 var UI = {
   icons: require('./iconBase'),
   log: require('./log'),
@@ -1299,7 +1301,7 @@ module.exports = function renderTableViewPane (doc, options) {
           e.stopPropagation()
           var target = utils.getTarget(e)
           var uri = target.getAttribute('href')
-          if (!uri) console.log('No href found \n')
+          if (!uri) debug.log('No href found \n')
           linkFunction(uri)
         },
         true
@@ -1621,14 +1623,14 @@ module.exports = function renderTableViewPane (doc, options) {
       }
 
       var elapsedTimeMS = Date.now() - startTime
-      console.log(
+      debug.log(
         'Query done: ' + rows.length + ' rows, ' + elapsedTimeMS + 'ms'
       )
       // Delete rows which were from old values not new
       for (let i = rows.length - 1; i >= 0; i--) {
         // backwards
         if (rows[i].original) {
-          console.log('   deleting row ' + rows[i]._subject)
+          debug.log('   deleting row ' + rows[i]._subject)
           var tr = rows[i]._htmlRow
           tr.parentNode.removeChild(tr)
           delete rowsLookup[getSubjectId(rows[i]._subject)]

@@ -3,7 +3,8 @@ import { iconBase, originalIconBase } from '../iconBase'
 import store from '../store'
 import ns from '../ns'
 import style from '../style'
-import log from '../log'
+import * as debug from '../debug'
+import { info } from '../log'
 
 /**
  * UI Widgets such as buttons
@@ -50,7 +51,7 @@ function getStatusArea (context?: StatusAreaContext) {
 export function complain (context?: StatusAreaContext, err?: string) {
   if (!err) return // only if error
   var ele = getStatusArea(context)
-  console.log('Complaint: ' + err)
+  debug.log('Complaint: ' + err)
   if (ele) ele.appendChild(error.errorMessageBlock((context && context.dom) || document, err))
   else alert(err)
 }
@@ -727,7 +728,7 @@ export function attachmentList (dom: HTMLDocument, subject: NamedNode, div: HTML
     var ins: any = []
     uris.map(function (u) {
       var target = sym(u) // Attachment needs text label to disinguish I think not icon.
-      console.log('Dropped on attachemnt ' + u) // icon was: iconBase + 'noun_25830.svg'
+      debug.log('Dropped on attachemnt ' + u) // icon was: iconBase + 'noun_25830.svg'
       ins.push(st(subject, predicate, target, doc))
     })
     kb.updater.update([], ins, function (uri, ok, errorBody, _xhr) {
@@ -762,7 +763,7 @@ export function openHrefInOutlineMode (e: Event) {
   e.stopPropagation()
   var target = utils.getTarget(e)
   var uri = target.getAttribute('href')
-  if (!uri) return console.log('openHrefInOutlineMode: No href found!\n')
+  if (!uri) return debug.log('openHrefInOutlineMode: No href found!\n')
   const dom = window.document
   if ((dom as any).outlineManager) {
     // @@ TODO Remove the use of document as a global object
@@ -773,7 +774,7 @@ export function openHrefInOutlineMode (e: Event) {
       .getOutliner()
       .GotoSubject(store.sym(uri), true, undefined, true, undefined)
   } else {
-    console.log('ERROR: Can\'t access outline manager in this config')
+    debug.log('ERROR: Can\'t access outline manager in this config')
   }
   // dom.outlineManager.GotoSubject(store.sym(uri), true, undefined, true, undefined)
 }
@@ -869,7 +870,7 @@ export function propertyTriage (kb: IndexedFormula): any {
   }
   possibleProperties.op = op
   possibleProperties.dp = dp
-  log.info(`propertyTriage: ${no} non-lit, ${nd} literal. ${nu} unknown.`)
+  info(`propertyTriage: ${no} non-lit, ${nd} literal. ${nu} unknown.`)
   return possibleProperties
 }
 
@@ -1217,7 +1218,7 @@ export function fileUploadButtonDiv (
   input.addEventListener(
     'change',
     (event: any) => {
-      console.log('File drop event: ', event)
+      debug.log('File drop event: ', event)
       if (event.files) {
         droppedFileHandler(event.files)
       } else if (event.target && event.target.files) {

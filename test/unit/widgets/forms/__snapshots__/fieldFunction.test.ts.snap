@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fieldFunction function returned if no matching function exists appends an error block to a container 1`] = `
+<div>
+  <div
+    style="margin: 0.1em; padding: 0.5em; border: 0.05em solid gray; background-color: #fee; color:black;"
+  >
+    No handler for field &lt;http://example.com/#form&gt; of type http://example.com/#unknown-type
+  </div>
+</div>
+`;
+
+exports[`fieldFunction function returned if no matching function exists returns an error block 1`] = `
+<div
+  style="margin: 0.1em; padding: 0.5em; border: 0.05em solid gray; background-color: #fee; color:black;"
+>
+  No handler for field &lt;http://example.com/#form&gt; of type http://example.com/#unknown-type
+</div>
+`;
+
+exports[`fieldFunction function returned if subject type undefined appends an error block to a container 1`] = `
+<div>
+  <div
+    style="margin: 0.1em; padding: 0.5em; border: 0.05em solid gray; background-color: #fee; color:black;"
+  >
+    No handler for field &lt;http://example.com/#doesnt-exist&gt; of type undefined
+  </div>
+</div>
+`;
+
+exports[`fieldFunction function returned if subject type undefined returns an error block 1`] = `
+<div
+  style="margin: 0.1em; padding: 0.5em; border: 0.05em solid gray; background-color: #fee; color:black;"
+>
+  No handler for field &lt;http://example.com/#doesnt-exist&gt; of type undefined
+</div>
+`;

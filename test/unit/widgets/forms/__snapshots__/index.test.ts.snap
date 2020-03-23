@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BooleanField runs 1`] = `
+<div
+  style="margin: 0.1em; padding: 0.5em; border: 0.05em solid gray; background-color: #fee; color:black;"
+>
+  No property to boolean field: &lt;http://example.com/#form&gt;
+</div>
+`;
+
+exports[`Classifier runs 1`] = `
+<span>
+  <div
+    style="margin: 0.1em; padding: 0.5em; border: 0.05em solid gray; background-color: #fee; color:black;"
+  >
+    Can't do multiple selector with no subclasses of category: &lt;http://example.com/#bla&gt;
+  </div>
+</span>
+`;
+
+exports[`Comment runs 1`] = `
+<div>
+  <undefined>
+    &lt;http://example.com/#bla&gt;
+  </undefined>
+</div>
+`;
+
+exports[`Form field runs 1`] = `
+<div
+  style="padding-left: 2em; border: 0.05em solid #888888;"
+/>
+`;
+
+exports[`Heading runs 1`] = `
+<div>
+  <undefined>
+    &lt;http://example.com/#bla&gt;
+  </undefined>
+</div>
+`;
+
+exports[`Options field runs 1`] = `<div />`;
+
+exports[`TristateField runs 1`] = `
+<div
+  style="margin: 0.1em; padding: 0.5em; border: 0.05em solid gray; background-color: #fee; color:black;"
+>
+  No property to boolean field: &lt;http://example.com/#form&gt;
+</div>
+`;

@@ -1,0 +1,295 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset='UTF-8'>
+    <title>solid-ui UI.log examples page</title>
+    <script type="text/javascript" src="../../lib/webpack-bundle.js"></script>
+    <script>
+      function showSource (widgetName) {
+        document.querySelector(`#viewSource-${widgetName}`).innerHTML = document.querySelector(`#script-${widgetName}`).innerText
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;')
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        Array.from(document.querySelectorAll('article')).forEach(title => {
+          const section = title.id
+          showSource(section)
+        })
+      })
+    </script>
+</head>
+<body style="padding-right: 300px;">
+
+<h1>The log module</h1>
+
+<p>
+    On this page you'll find some examples from the log module. See
+    <a href="https://solid.github.io/solid-ui/Documentation/api/modules/_log_">API documentation</a> for more
+    information.
+</p>
+
+<div style="background: white; border: 0.5em solid black; position: fixed; top: 0; right: 0; width: 300px; padding: 0.5em;">
+    <p>
+        <strong>Status area:</strong> This is the playground which the examples will interact with. Click the various
+        buttons to see their effect here.
+    </p>
+    <div id="status" style="border: 1px solid red; padding: 0.5em; max-height: 50vh; overflow: auto;"></div>
+    <p>
+        Note that by default only <code>msg</code>, <code>warn</code> and <code>error</code> will add messages to the
+        status area. You can change this by using <a href="#log-setLevel"><code>setLevel</code></a>.
+    </p>
+</div>
+
+<article id="log-msg">
+    <h2>
+        <a href="#log-msg">
+            <code>log.msg</code>: A simple message
+        </a>
+    </h2>
+    <script id="script-log-msg">
+      window.addEventListener('DOMContentLoaded', () => {
+        const button = document.createElement('button')
+        button.innerText = 'Add a message'
+        button.addEventListener('click', () => UI.log.msg('A simple message'))
+        document.querySelector('#demo-log-msg').appendChild(button)
+      })
+    </script>
+    <pre id="viewSource-log-msg"></pre>
+    <div id="demo-log-msg"></div>
+</article>
+
+<article id="log-warn">
+    <h2>
+        <a href="#log-warn">
+            <code>log.warn</code>: A warning message
+        </a>
+    </h2>
+    <script id="script-log-warn">
+      window.addEventListener('DOMContentLoaded', () => {
+        const button = document.createElement('button')
+        button.innerText = 'Add a warning'
+        button.addEventListener('click', () => UI.log.warn('A warning message'))
+        document.querySelector('#demo-log-warn').appendChild(button)
+      })
+    </script>
+    <pre id="viewSource-log-warn"></pre>
+    <div id="demo-log-warn"></div>
+</article>
+
+<article id="log-debug">
+    <h2>
+        <a href="#log-debug">
+            <code>log.debug</code>: A debug message
+        </a>
+    </h2>
+    <script id="script-log-debug">
+      window.addEventListener('DOMContentLoaded', () => {
+        const button = document.createElement('button')
+        button.innerText = 'Add a debugging message'
+        button.addEventListener('click', () => UI.log.debug('A debugging message'))
+        document.querySelector('#demo-log-debug').appendChild(button)
+      })
+    </script>
+    <pre id="viewSource-log-debug"></pre>
+    <div id="demo-log-debug"></div>
+</article>
+
+<article id="log-info">
+    <h2>
+        <a href="#log-info">
+            <code>log.info</code>: An info message
+        </a>
+    </h2>
+    <script id="script-log-info">
+      window.addEventListener('DOMContentLoaded', () => {
+        const button = document.createElement('button')
+        button.innerText = 'Add an info message'
+        button.addEventListener('click', () => UI.log.info('An info message'))
+        document.querySelector('#demo-log-info').appendChild(button)
+      })
+    </script>
+    <pre id="viewSource-log-info"></pre>
+    <div id="demo-log-info"></div>
+</article>
+
+<article id="log-error">
+    <h2>
+        <a href="#log-error">
+            <code>log.error</code>: An error message
+        </a>
+    </h2>
+    <script id="script-log-error">
+      window.addEventListener('DOMContentLoaded', () => {
+        const button = document.createElement('button')
+        button.innerText = 'Add an error message'
+        button.addEventListener('click', () => UI.log.error('An error message'))
+        document.querySelector('#demo-log-error').appendChild(button)
+      })
+    </script>
+    <pre id="viewSource-log-error"></pre>
+    <div id="demo-log-error"></div>
+</article>
+
+<article id="log-success">
+    <h2>
+        <a href="#log-success">
+            <code>log.success</code>: A success message
+        </a>
+    </h2>
+    <script id="script-log-success">
+      window.addEventListener('DOMContentLoaded', () => {
+        const button = document.createElement('button')
+        button.innerText = 'Add a success message'
+        button.addEventListener('click', () => UI.log.success('A success message'))
+        document.querySelector('#demo-log-success').appendChild(button)
+      })
+    </script>
+    <pre id="viewSource-log-success"></pre>
+    <div id="demo-log-success"></div>
+</article>
+
+<article id="log-alert">
+    <h2>
+        <a href="#log-alert">
+            <code>log.alert</code>: An alert message
+        </a>
+    </h2>
+    <p>
+        This example uses alert to notify user of a message. It will not log in the status area unless
+        <code>window.alert</code> is not available.
+    </p>
+    <script id="script-log-alert">
+      window.addEventListener('DOMContentLoaded', () => {
+        const button = document.createElement('button')
+        button.innerText = 'Trigger an alert message'
+        button.addEventListener('click', () => UI.log.alert('An alert message'))
+        document.querySelector('#demo-log-alert').appendChild(button)
+      })
+    </script>
+    <pre id="viewSource-log-alert"></pre>
+    <div id="demo-log-alert"></div>
+</article>
+
+<article id="log-clear">
+    <h2>
+        <a href="#log-clear">
+            <code>log.clear</code>: Clear messages
+        </a>
+    </h2>
+    <p>
+        Using this method you can clear the existing messages in the status area.
+    </p>
+    <script id="script-log-clear">
+      window.addEventListener('DOMContentLoaded', () => {
+        const button = document.createElement('button')
+        button.innerText = 'Clear status area'
+        button.addEventListener('click', () => UI.log.clear())
+        document.querySelector('#demo-log-clear').appendChild(button)
+      })
+    </script>
+    <pre id="viewSource-log-clear"></pre>
+    <div id="demo-log-clear"></div>
+</article>
+
+<article id="log-setLevel">
+    <h2>
+        <a href="#log-setLevel">
+            <code>log.setLevel</code>: Configure which messages that are to be shown
+        </a>
+    </h2>
+    <p>
+        The module uses <a href="https://en.wikipedia.org/wiki/Mask_(computing)">bitmask</a> to filter which types
+        of messages that will be shown. It assigns the following 10-based number to each type (binaries in
+        parenthesis):
+    </p>
+    <ul>
+        <li>Error: 1 (000001)</li>
+        <li>Warning: 2 (000010)</li>
+        <li>Message: 4 (000100)</li>
+        <li>Success: 8 (001000)</li>
+        <li>Info: 16 (010000)</li>
+        <li>Debug: 32 (100000)</li>
+    </ul>
+    <p>
+        By default only error, warning, and normal messages will be shown, hence the number 7 that is shown by default
+        in this example. You can set it to show all types of messages by passing 63 (which is the sum of all, and is
+        111111 in binary).
+    </p>
+    <script id="script-log-setLevel">
+      window.addEventListener('DOMContentLoaded', () => {
+        const input = document.createElement('input')
+        input.type = 'text'
+        input.inputmode = 'numeric'
+        input.pattern = '[0-9]*'
+        input.value = 7
+        document.querySelector('#demo-log-setLevel').appendChild(input)
+        const button = document.createElement('button')
+        button.innerText = 'Set level'
+        button.addEventListener('click', () => UI.log.setLevel(parseInt(input.value, 10)))
+        document.querySelector('#demo-log-setLevel').appendChild(button)
+      })
+    </script>
+    <pre id="viewSource-log-setLevel"></pre>
+    <div id="demo-log-setLevel"></div>
+</article>
+
+<article id="log-dumpHTML">
+    <h2>
+        <a href="#log-dumpHTML">
+            <code>log.dumpHTML</code>: Dump all HTML in body in a log message
+        </a>
+    </h2>
+    <script id="script-log-dumpHTML">
+      window.addEventListener('DOMContentLoaded', () => {
+        const button = document.createElement('button')
+        button.innerText = 'Dump HTML'
+        button.addEventListener('click', () => UI.log.dumpHTML())
+        document.querySelector('#demo-log-dumpHTML').appendChild(button)
+      })
+    </script>
+    <pre id="viewSource-log-dumpHTML"></pre>
+    <div id="demo-log-dumpHTML"></div>
+</article>
+
+<article id="log-logAscending">
+    <h2>
+        <a href="#log-logAscending">
+            <code>log.logAscending</code>: Start logging all messages in ascending order
+        </a>
+    </h2>
+    <script id="script-log-logAscending">
+      window.addEventListener('DOMContentLoaded', () => {
+        const button = document.createElement('button')
+        button.innerText = 'Log ascending'
+        button.addEventListener('click', () => UI.log.logAscending())
+        document.querySelector('#demo-log-logAscending').appendChild(button)
+      })
+    </script>
+    <pre id="viewSource-log-logAscending"></pre>
+    <div id="demo-log-logAscending"></div>
+</article>
+
+<article id="log-logDescending">
+    <h2>
+        <a href="#log-logDescending">
+            <code>log.logDescending</code>: Start logging all messages in descending order
+        </a>
+    </h2>
+    <script id="script-log-logDescending">
+      window.addEventListener('DOMContentLoaded', () => {
+        const button = document.createElement('button')
+        button.innerText = 'Log descending'
+        button.addEventListener('click', () => UI.log.logDescending())
+        document.querySelector('#demo-log-logDescending').appendChild(button)
+      })
+    </script>
+    <pre id="viewSource-log-logDescending"></pre>
+    <div id="demo-log-logDescending"></div>
+</article>
+
+</body>
+</html>
