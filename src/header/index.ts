@@ -1,11 +1,99 @@
 import { IndexedFormula, NamedNode, sym } from 'rdflib'
-import { authn, widgets } from 'solid-ui'
+import { loginStatusBox, solidAuthClient } from '../authn/authn'
+import { widgets } from '../widgets'
 import { icon } from './icon'
-import { SolidSession } from '../../typings/solid-auth-client'
-import { emptyProfile } from './empty-profile'
-import { throttle } from '../helpers/throttle'
-import { getPod } from './metadata'
-import { getOutliner } from 'solid-panes'
+import { log } from '../debug'
+// import { SolidSession } from '../../typings/solid-auth-client'
+// import { emptyProfile } from './empty-profile'
+// import { throttle } from '../helpers/throttle'
+// import { getPod } from './metadata'
+// import { getOutliner } from 'solid-panes'
+
+// Just for now..  ./metadata in mashlib
+// 3 variables below including at_hash in Solid claim had to make camelcase...
+interface SolidAuthorization {
+  accessToken: string;
+  clientId: string;
+  idToken: string;
+}
+
+interface SolidClaim {
+  atHash: string;
+  aud: string;
+  azp: string;
+  cnf: {
+    jwk: string;
+  };
+  exp: number;
+  iat: number;
+  iss: string;
+  jti: string;
+  nonce: string;
+  sub: string;
+}
+export interface SolidSession {
+  authorization: SolidAuthorization;
+  credentialType: string;
+  idClaims: SolidClaim;
+  idp: string;
+  issuer: string;
+  sessionKey: string;
+  webId: string;
+}
+
+export function getPod (): NamedNode {
+  // @@ TODO: This is given that mashlib runs on NSS - might need to change when we want it to run on other Pod servers
+  return sym(document.location.origin).site()
+}
+
+export const emptyProfile = `
+<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M13 25C19.6274 25 25 19.6274 25 13C25 6.37258 19.6274 1 13 1C6.37258 1 1 6.37258 1 13C1 19.6274 6.37258 25 13 25Z" fill="#D8D8D8" stroke="#8B8B8B"/>
+    <mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="26" height="26">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M13 25C19.6274 25 25 19.6274 25 13C25 6.37258 19.6274 1 13 1C6.37258 1 1 6.37258 1 13C1 19.6274 6.37258 25 13 25Z" fill="white" stroke="white"/>
+    </mask>
+    <g mask="url(#mask0)">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M17.0468 10.4586C17.0468 14.4979 15.4281 16.9214 12.9999 16.9214C10.5718 16.9214 8.95298 14.4979 8.95298 10.4586C8.95298 6.41931 12.9999 6.41931 12.9999 6.41931C12.9999 6.41931 17.0468 6.41931 17.0468 10.4586ZM4.09668 23.3842C6.52483 17.7293 12.9999 17.7293 12.9999 17.7293C12.9999 17.7293 19.475 17.7293 21.9031 23.3842C21.9031 23.3842 17.8481 25 12.9999 25C8.15169 25 4.09668 23.3842 4.09668 23.3842Z" fill="#8B8B8B"/>
+    </g>
+</svg>`
+
+type ThrottleOptions = {
+  leading?: boolean;
+  throttling?: boolean;
+  trailing?: boolean;
+}
+
+export function throttle (func: Function, wait: number, options: ThrottleOptions = {}): (...args: any[]) => any {
+  let context: any, args: any, result: any
+  let timeout: any = null
+  let previous = 0
+  const later = function () {
+    previous = !options.leading ? 0 : Date.now()
+    timeout = null
+    result = func.apply(context, args)
+    if (!timeout) context = args = null
+  }
+  return function () {
+    const now = Date.now()
+    if (!previous && !options.leading) previous = now
+    const remaining = wait - (now - previous)
+    // @ts-ignore
+    context = this
+    args = arguments
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout)
+        timeout = null
+      }
+      previous = now
+      result = func.apply(context, args)
+      if (!timeout) context = args = null
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining)
+    }
+    return result
+  }
+}
 
 export async function initHeader (store: IndexedFormula) {
   const header = document.getElementById('PageHeader')
@@ -14,12 +102,14 @@ export async function initHeader (store: IndexedFormula) {
   }
 
   const pod = getPod()
-  authn.solidAuthClient.trackSession(rebuildHeader(header, store, pod))
+  log(pod)
+  solidAuthClient.trackSession(rebuildHeader(header, store, pod))
 }
 
 function rebuildHeader (header: HTMLElement, store: IndexedFormula, pod: NamedNode) {
   return async (session: SolidSession | null) => {
     const user = session ? sym(session.webId) : null
+    log(user)
     header.innerHTML = ''
     header.appendChild(await createBanner(store, pod, user))
   }
@@ -46,15 +136,15 @@ async function createBanner (store: IndexedFormula, pod: NamedNode, user: NamedN
 function createLoginSignUpButtons () {
   const profileLoginButtonPre = document.createElement('div')
   profileLoginButtonPre.classList.add('header-banner__login')
-  profileLoginButtonPre.appendChild(authn.loginStatusBox(document, null, {}))
+  profileLoginButtonPre.appendChild(loginStatusBox(document, null, {}))
   return profileLoginButtonPre
 }
-
+/* commenting this out for the momemnt because I think we should avoid ouliner from pane if possible
 async function openDashboardPane (outliner: any, pane: string): Promise<void> {
   outliner.showDashboard({
     pane
   })
-}
+} */
 
 function createUserMenuButton (label: string, onClick: EventListenerOrEventListenerObject): HTMLElement {
   const button = document.createElement('button')
@@ -78,17 +168,17 @@ async function createUserMenu (store: IndexedFormula, user: NamedNode): Promise<
     // Making sure that Profile is loaded before building menu
     await fetcher.load(user)
   }
-  const outliner = getOutliner(document)
+  // SAM const outliner = getOutliner(document)
 
   const loggedInMenuList = document.createElement('ul')
   loggedInMenuList.classList.add('header-user-menu__list')
   loggedInMenuList.appendChild(createUserMenuItem(createUserMenuLink('Show your profile', user.uri)))
-  const menuItems = await getMenuItems(outliner)
+  /* SAM const menuItems = await getMenuItems(outliner)
   menuItems.forEach(item => {
     loggedInMenuList.appendChild(createUserMenuItem(createUserMenuButton(item.label, () => openDashboardPane(outliner, item.tabName || item.paneName))))
   })
   loggedInMenuList.appendChild(createUserMenuItem(createUserMenuButton('Log out', () => authn.solidAuthClient.logout())))
-
+*/
   const loggedInMenu = document.createElement('nav')
   loggedInMenu.classList.add('header-user-menu__navigation-menu')
   loggedInMenu.setAttribute('aria-hidden', 'true')

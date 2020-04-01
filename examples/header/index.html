@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset='UTF-8'>
+    <title>solid-ui UI.widgets.header examples page</title>
+    <script type="text/javascript" src="../../lib/webpack-bundle.js"></script>
+    <script>
+      const $ = document.querySelector.bind(document)
+      function showSource(widgetName) {
+        $(`#viewSource-${widgetName}`).innerHTML = $(`#script-${widgetName}`).innerText
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;")
+      }
+    </script>
+</head>
+<body>
+
+<h2 id="header"><a href="#header">Header</a></h2>
+<div id='PageHeader'></div>
+<script id="script-header">
+  window.addEventListener('DOMContentLoaded', async () => {
+    try {
+      await UI.initHeader(UI.store)
+    } catch (error) {
+      window.alert(`Error loading header. You need to have a div with id = PageHeader on your page.`)
+    }
+  });
+</script>
+<pre id="viewSource-header"></pre><script>showSource('header')</script>
+<div id="div-header"></div>
+
+</body>
+</html>
