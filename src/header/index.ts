@@ -7,8 +7,6 @@ import { log } from '../debug'
 // import { emptyProfile } from './empty-profile'
 // import { throttle } from '../helpers/throttle'
 // import { getPod } from './metadata'
-import { getOutliner } from './outliner'
-
 // Just for now..  ./metadata in mashlib
 // 3 variables below including at_hash in Solid claim had to make camelcase...
 interface SolidAuthorization {
@@ -108,7 +106,8 @@ export async function initHeader (store: IndexedFormula) {
 
 function rebuildHeader (header: HTMLElement, store: IndexedFormula, pod: NamedNode) {
   return async (session: SolidSession | null) => {
-    const user = session ? sym(session.webId) : null
+    // const user = session ? sym(session.webId) : null
+    const user = sym('https://sharonstrats.inrupt.net/profile/card#me')
     log(user)
     header.innerHTML = ''
     header.appendChild(await createBanner(store, pod, user))
@@ -167,15 +166,16 @@ async function createUserMenu (store: IndexedFormula, user: NamedNode): Promise<
     // Making sure that Profile is loaded before building menu
     await fetcher.load(user)
   }
-  const outliner = getOutliner(document)
+  // const outliner = getOutliner(document)
 
   const loggedInMenuList = document.createElement('ul')
   loggedInMenuList.classList.add('header-user-menu__list')
   loggedInMenuList.appendChild(createUserMenuItem(createUserMenuLink('Show your profile', user.uri)))
+  /*
   const menuItems = await getMenuItems(outliner)
   menuItems.forEach(item => {
     loggedInMenuList.appendChild(createUserMenuItem(createUserMenuButton(item.label, () => openDashboardPane(outliner, item.tabName || item.paneName))))
-  })
+  }) */
   loggedInMenuList.appendChild(createUserMenuItem(createUserMenuButton('Log out', () => solidAuthClient.logout())))
 
   const loggedInMenu = document.createElement('nav')
@@ -186,12 +186,12 @@ async function createUserMenu (store: IndexedFormula, user: NamedNode): Promise<
   const loggedInMenuTrigger = document.createElement('button')
   loggedInMenuTrigger.classList.add('header-user-menu__trigger')
   loggedInMenuTrigger.type = 'button'
-  const profileImg = getProfileImg(store, user)
+  /* const profileImg = getProfileImg(store, user)
   if (typeof profileImg === 'string') {
     loggedInMenuTrigger.innerHTML = profileImg
   } else {
     loggedInMenuTrigger.appendChild(profileImg)
-  }
+  } */
 
   const loggedInMenuContainer = document.createElement('div')
   loggedInMenuContainer.classList.add('header-banner__user-menu', 'header-user-menu')
