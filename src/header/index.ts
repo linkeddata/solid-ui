@@ -7,7 +7,7 @@ import { log } from '../debug'
 // import { emptyProfile } from './empty-profile'
 // import { throttle } from '../helpers/throttle'
 // import { getPod } from './metadata'
-// import { getOutliner } from 'solid-panes'
+import { getOutliner } from './outliner'
 
 // Just for now..  ./metadata in mashlib
 // 3 variables below including at_hash in Solid claim had to make camelcase...
@@ -139,12 +139,11 @@ function createLoginSignUpButtons () {
   profileLoginButtonPre.appendChild(loginStatusBox(document, null, {}))
   return profileLoginButtonPre
 }
-/* commenting this out for the momemnt because I think we should avoid ouliner from pane if possible
 async function openDashboardPane (outliner: any, pane: string): Promise<void> {
   outliner.showDashboard({
     pane
   })
-} */
+}
 
 function createUserMenuButton (label: string, onClick: EventListenerOrEventListenerObject): HTMLElement {
   const button = document.createElement('button')
@@ -168,17 +167,17 @@ async function createUserMenu (store: IndexedFormula, user: NamedNode): Promise<
     // Making sure that Profile is loaded before building menu
     await fetcher.load(user)
   }
-  // SAM const outliner = getOutliner(document)
+  const outliner = getOutliner(document)
 
   const loggedInMenuList = document.createElement('ul')
   loggedInMenuList.classList.add('header-user-menu__list')
   loggedInMenuList.appendChild(createUserMenuItem(createUserMenuLink('Show your profile', user.uri)))
-  /* SAM const menuItems = await getMenuItems(outliner)
+  const menuItems = await getMenuItems(outliner)
   menuItems.forEach(item => {
     loggedInMenuList.appendChild(createUserMenuItem(createUserMenuButton(item.label, () => openDashboardPane(outliner, item.tabName || item.paneName))))
   })
-  loggedInMenuList.appendChild(createUserMenuItem(createUserMenuButton('Log out', () => authn.solidAuthClient.logout())))
-*/
+  loggedInMenuList.appendChild(createUserMenuItem(createUserMenuButton('Log out', () => solidAuthClient.logout())))
+
   const loggedInMenu = document.createElement('nav')
   loggedInMenu.classList.add('header-user-menu__navigation-menu')
   loggedInMenu.setAttribute('aria-hidden', 'true')

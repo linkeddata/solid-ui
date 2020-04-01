@@ -63,7 +63,8 @@
     "solid-auth-client": "^2.3.1",
     "solid-auth-tls": "^0.1.2",
     "solid-namespace": "^0.3.0",
-    "ts-jest": "^25.2.0"
+    "solid-panes": "^3.0.1",
+    "ts-jest": "^25.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
