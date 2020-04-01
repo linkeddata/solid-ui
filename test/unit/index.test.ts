@@ -24,6 +24,7 @@ describe('Index', () => {
       'utils',
       'widgets',
       'versionInfo',
+      'initHeader',
       'dom',
       'rdf',
       'log',
