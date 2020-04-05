@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../setup'
+import { silenceDebugMessages } from '../helpers/setup'
 import { iconBase, originalIconBase } from '../../src/iconBase'
 
 silenceDebugMessages()

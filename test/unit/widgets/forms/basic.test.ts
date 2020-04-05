@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../../../setup'
+import { silenceDebugMessages } from '../../../helpers/setup'
 import { namedNode } from 'rdflib'
 import {
   fieldLabel,

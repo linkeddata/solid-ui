@@ -5,6 +5,7 @@ import ns from '../ns'
 import style from '../style'
 import * as debug from '../debug'
 import { info } from '../log'
+import { getClasses } from '../jss'
 
 /**
  * UI Widgets such as buttons
@@ -25,6 +26,12 @@ export type StatusAreaContext = {
   statusArea?: HTMLElement
   div?: HTMLElement
   dom?: HTMLDocument
+}
+export type ButtonType = 'Primary' | 'Secondary'
+
+export type ButtonWidgetOptions = {
+  buttonColor?: ButtonType,
+  needsBorder?: boolean
 }
 function getStatusArea (context?: StatusAreaContext) {
   var box = (context && context.statusArea) || (context && context.div) || null
@@ -477,24 +484,76 @@ export function deleteButtonWithCheck (
   return deleteButtonElt
 }
 
+/**
+ * Get the button style, based on options.
+ * See https://design.inrupt.com/atomic-core/?cat=Atoms#Buttons
+ */
+function getButtonStyle (options: ButtonWidgetOptions = {}) {
+  // default to primary color
+  const color: string = (options.buttonColor === 'Secondary') ? '#01c9ea' : '#7c4dff'
+  let backgroundColor: string = color
+  let fontColor: string = '#ffffff'
+  let borderColor: string = color
+  // default to primary color
+  let hoverBackgroundColor: string = (options.buttonColor === 'Secondary') ? '#37cde6' : '#9f7dff'
+  let hoverFontColor: string = fontColor
+  if (options.needsBorder) {
+    backgroundColor = '#ffffff'
+    fontColor = color
+    borderColor = color
+    hoverBackgroundColor = color
+    hoverFontColor = backgroundColor
+  }
+
+  return {
+    'background-color': `${backgroundColor}`,
+    color: `${fontColor}`,
+    'font-family': 'Raleway, Roboto, sans-serif',
+    'border-radius': '0.25em',
+    'border-color': `${borderColor}`,
+    border: '1px solid',
+    cursor: 'pointer',
+    'font-size': '.8em',
+    'text-decoration': 'none',
+    padding: '0.5em 4em',
+    transition: '0.25s all ease-in-out',
+    outline: 'none',
+    '&:hover': {
+      'background-color': `${hoverBackgroundColor}`,
+      color: `${hoverFontColor}`,
+      transition: '0.25s all ease-in-out'
+    }
+  }
+}
+
 /*  Make a button
  *
  * @param dom - the DOM document object
- * @Param iconURI - the URI of theb icon to use
+ * @Param iconURI - the URI of the icon to use (if any)
  * @param text - the tooltip text or possibly button contents text
  * @param handler <function> - A handler to called when button is clicked
  *
  * @returns <dDomElement> - the button
  */
-export function button (dom: HTMLDocument, iconURI: string, text: string, handler: (event: any) => void) {
+export function button (dom: HTMLDocument, iconURI: string | undefined, text: string, handler: (event: any) => void, options: ButtonWidgetOptions = { buttonColor: 'Primary', needsBorder: false }) {
   var button = dom.createElement('button')
   button.setAttribute('type', 'button')
-  button.setAttribute('style', style.buttonStyle)
   // button.innerHTML = text  // later, user preferences may make text preferred for some
-  var img = button.appendChild(dom.createElement('img'))
-  img.setAttribute('src', iconURI)
-  img.setAttribute('style', 'width: 2em; height: 2em;') // trial and error. 2em disappears
-  img.title = text
+  if (iconURI) {
+    var img = button.appendChild(dom.createElement('img'))
+    img.setAttribute('src', iconURI)
+    img.setAttribute('style', 'width: 2em; height: 2em;') // trial and error. 2em disappears
+    img.title = text
+    button.setAttribute('style', style.buttonStyle)
+  } else {
+    button.innerText = text.toLocaleUpperCase()
+    const style = getButtonStyle(options)
+    const { classes } = getClasses(dom.head, {
+      textButton: style
+    })
+
+    button.classList.add(classes.textButton)
+  }
   if (handler) {
     button.addEventListener('click', handler, false)
   }
@@ -1105,13 +1164,13 @@ function twoLineTransaction (dom: HTMLDocument, x: NamedNode): HTMLElement {
   }
   var box = dom.createElement('table')
   box.innerHTML = `
-    <tr>
-      <td colspan="2">${enc('payee')}</td>
-    </tr>
-    <tr>
+      <tr>
+      <td colspan="2"> ${enc('payee')}</td>
+      < /tr>
+      < tr >
       <td>${enc('date').slice(0, 10)}</td>
-      <td style="text-align: right;">${enc('amount')}</td>
-    </tr>`
+      <td style = "text-align: right;">${enc('amount')}</td>
+      </tr>`
   if (failed) {
     box.innerHTML = `
       <tr>

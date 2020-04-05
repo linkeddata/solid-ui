@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../../setup'
+import { silenceDebugMessages } from '../../helpers/setup'
 import { findBookmarkDocument, toggleBookmark, renderBookmarksButton } from '../../../src/chat/bookmarks'
 import { NamedNode } from 'rdflib'
 

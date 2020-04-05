@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../../setup'
+import { silenceDebugMessages } from '../../helpers/setup'
 
 // SHARON IS WORKING ON THIS FILE
 // NOT DOING ANYTHING FOR NOW AS SHE WILL CLEAN IT UP LATER

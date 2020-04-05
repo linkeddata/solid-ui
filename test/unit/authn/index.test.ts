@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../../setup'
+import { silenceDebugMessages } from '../../helpers/setup'
 import * as Authn from '../../../src/authn/authn'
 import * as Index from '../../../src/authn/index'
 

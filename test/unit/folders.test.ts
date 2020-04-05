@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../setup'
+import { silenceDebugMessages } from '../helpers/setup'
 import { JSDOM } from 'jsdom'
 import { deleteRecursive, deleteFolder } from '../../src/folders'
 import { graph } from 'rdflib'

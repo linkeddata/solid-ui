@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../../setup'
+import { silenceDebugMessages } from '../../helpers/setup'
 import { instantiateAccessController } from '../helpers/instantiateAccessController'
 import { AccessController } from '../../../src/acl/access-controller'
 import store from '../../../src/store'

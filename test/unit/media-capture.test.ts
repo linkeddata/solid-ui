@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../setup'
+import { silenceDebugMessages } from '../helpers/setup'
 import { JSDOM } from 'jsdom'
 import { cameraCaptureControl, cameraButton } from '../../src/media-capture'
 import { graph } from 'rdflib'

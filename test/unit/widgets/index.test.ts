@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../../setup'
+import { silenceDebugMessages } from '../../helpers/setup'
 import * as DragAndDrop from '../../../src/widgets/dragAndDrop'
 import * as Error from '../../../src/widgets/error'
 import * as Buttons from '../../../src/widgets/buttons'

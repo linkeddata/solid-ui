@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../setup'
+import { silenceDebugMessages } from '../helpers/setup'
 import { tabs } from '../../src/index'
 import { tabWidget } from '../../src/tabs'
 import { Collection, lit, NamedNode, namedNode } from 'rdflib'

@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../setup'
+import { silenceDebugMessages } from '../helpers/setup'
 import {
   textInputStyle,
   buttonStyle,
@@ -27,11 +27,6 @@ describe('textInputStyle', () => {
 describe('buttonStyle', () => {
   it('exists', () => {
     expect(typeof buttonStyle).toEqual('string')
-  })
-})
-describe('textButtonStyle', () => {
-  it('exists', () => {
-    expect(typeof textButtonStyle).toEqual('string')
   })
 })
 describe('iconStyle', () => {

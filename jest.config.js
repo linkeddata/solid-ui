@@ -1,6 +1,6 @@
 module.exports = {
   verbose: true,
   setupFilesAfterEnv: [
-    './test/setup.ts'
+    './test/helpers/setup.ts'
   ]
 }

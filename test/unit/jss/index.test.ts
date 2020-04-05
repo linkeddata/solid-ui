@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../../setup'
+import { silenceDebugMessages } from '../../helpers/setup'
 import { getClasses, getStylesheet } from '../../../src/jss/index'
 
 silenceDebugMessages()

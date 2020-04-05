@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../setup'
+import { silenceDebugMessages } from '../helpers/setup'
 import NounCamera1618446 from '../../src/noun_Camera_1618446_000000'
 
 silenceDebugMessages()

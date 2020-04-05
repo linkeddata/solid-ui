@@ -1,4 +1,4 @@
-import { silenceDebugMessages } from '../../setup'
+import { silenceDebugMessages } from '../../helpers/setup'
 import { DataBrowserContext } from 'pane-registry'
 import { sym, graph, namedNode } from 'rdflib'
 import { JSDOM } from 'jsdom'
