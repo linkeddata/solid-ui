@@ -5,27 +5,27 @@ export const styleMap = {
     color: 'black',
     cursor: 'pointer',
     display: 'block',
-    'font-family': 'Arial',
-    'font-size': '1em',
-    'text-align': 'left',
+    fontFamily: 'Arial',
+    fontSize: '1em',
+    textAlign: 'left',
     padding: '1em',
     width: '100%',
     '&:focus': {
-      'background-color': '#eee'
+      backgroundColor: '#eee'
     },
     '&:hover': {
-      'background-color': '#eee'
+      backgroundColor: '#eee'
     }
   },
   headerUserMenuList: {
-    'list-style': 'none',
+    listStyle: 'none',
     margin: '0',
     padding: '0'
   },
   headerUserMenuNavigationMenu: {
     background: 'white',
     border: 'solid 1px $divider-color',
-    'border-right': '0',
+    borderRight: '0',
     position: 'absolute',
     right: '0',
     top: '60px',

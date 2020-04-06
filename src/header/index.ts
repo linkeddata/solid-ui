@@ -170,7 +170,6 @@ function addStyleClassToElement (element: any, styleClass: string) {
   const style = getStyle(styleClass)
   const { classes } = getClasses(document.head, { [styleClass]: style })
   element.classList.add(classes[styleClass])
-  return element
 }
 
 function createUserMenuLink (label: string, href: string): HTMLElement {
@@ -193,9 +192,9 @@ async function createUserMenu (store: IndexedFormula, user: NamedNode, options: 
   }
   // const outliner = getOutliner(document)
   // SAM Options: here is where I can take the list of options and add to loggedInMenuList...
-  let loggedInMenuList = document.createElement('ul')
+  const loggedInMenuList = document.createElement('ul')
   // loggedInMenuList.classList.add('header-user-menu__list')
-  loggedInMenuList = addStyleClassToElement(loggedInMenuList, 'headerUserMenuList')
+  addStyleClassToElement(loggedInMenuList, 'headerUserMenuList')
   loggedInMenuList.appendChild(createUserMenuItem(createUserMenuLink('Show your profile', user.uri)))
   if (options.menuList) {
     options.menuList.map(function (menuItem) {
@@ -226,7 +225,7 @@ async function createUserMenu (store: IndexedFormula, user: NamedNode, options: 
   } */
 
   const loggedInMenuContainer = document.createElement('div')
-  loggedInMenuContainer.classList.add('header-banner__user-menu', 'header-user-menu')
+  // loggedInMenuContainer.classList.add('header-banner__user-menu', 'header-user-menu')
   loggedInMenuContainer.appendChild(loggedInMenuTrigger)
   loggedInMenuContainer.appendChild(loggedInMenu)
 
