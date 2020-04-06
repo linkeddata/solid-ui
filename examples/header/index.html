@@ -23,7 +23,8 @@
 <script id="script-header">
   window.addEventListener('DOMContentLoaded', async () => {
     try {
-      await UI.initHeader(UI.store)
+      options = {menuList: [{ label: "Testing", url: 'https://reflectechblog.wordpress.com/'}]}
+      await UI.initHeader(UI.store, options)
     } catch (error) {
       window.alert(`Error loading header. You need to have a div with id = PageHeader on your page.`)
     }

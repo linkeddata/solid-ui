@@ -3,6 +3,8 @@ import { loginStatusBox, solidAuthClient } from '../authn/authn'
 import { widgets } from '../widgets'
 import { icon } from './icon'
 import { log } from '../debug'
+import { getClasses } from '../jss'
+import { styleMap } from './styleMap'
 // import { SolidSession } from '../../typings/solid-auth-client'
 // import { emptyProfile } from './empty-profile'
 // import { throttle } from '../helpers/throttle'
@@ -15,6 +17,14 @@ interface SolidAuthorization {
   idToken: string;
 }
 
+type Menu = {
+  label: string,
+  url: string
+}
+type HeaderOptions = {
+  logo?: string,
+  menuList?: Menu[]
+}
 interface SolidClaim {
   atHash: string;
   aud: string;
@@ -93,35 +103,35 @@ export function throttle (func: Function, wait: number, options: ThrottleOptions
   }
 }
 
-export async function initHeader (store: IndexedFormula) {
+export async function initHeader (store: IndexedFormula, options: HeaderOptions) {
   const header = document.getElementById('PageHeader')
   if (!header) {
     return
   }
-
   const pod = getPod()
   log(pod)
-  solidAuthClient.trackSession(rebuildHeader(header, store, pod))
+  solidAuthClient.trackSession(rebuildHeader(header, store, pod, options))
 }
 
-function rebuildHeader (header: HTMLElement, store: IndexedFormula, pod: NamedNode) {
+function rebuildHeader (header: HTMLElement, store: IndexedFormula, pod: NamedNode, options: HeaderOptions) {
   return async (session: SolidSession | null) => {
     // const user = session ? sym(session.webId) : null
+    // SAM - don't forget to put in the line above instead of the line below :)
     const user = sym('https://sharonstrats.inrupt.net/profile/card#me')
     log(user)
     header.innerHTML = ''
-    header.appendChild(await createBanner(store, pod, user))
+    header.appendChild(await createBanner(store, pod, user, options))
   }
 }
 
-async function createBanner (store: IndexedFormula, pod: NamedNode, user: NamedNode | null): Promise<HTMLElement> {
+async function createBanner (store: IndexedFormula, pod: NamedNode, user: NamedNode | null, options: HeaderOptions): Promise<HTMLElement> {
   const podLink = document.createElement('a')
   podLink.href = pod.uri
   podLink.classList.add('header-banner__link')
   podLink.innerHTML = icon
 
   const menu = user
-    ? await createUserMenu(store, user)
+    ? await createUserMenu(store, user, options)
     : createLoginSignUpButtons()
 
   const banner = document.createElement('div')
@@ -152,25 +162,46 @@ function createUserMenuButton (label: string, onClick: EventListenerOrEventListe
   return button
 }
 
+function getStyle (styleClass) {
+  return styleMap[styleClass]
+}
+
+function addStyleClassToElement (element: any, styleClass: string) {
+  const style = getStyle(styleClass)
+  const { classes } = getClasses(document.head, { [styleClass]: style })
+  element.classList.add(classes[styleClass])
+  return element
+}
+
 function createUserMenuLink (label: string, href: string): HTMLElement {
   const link = document.createElement('a')
-  link.classList.add('header-user-menu__link')
+  // link.classList.add('header-user-menu__link')
+  const style = getStyle('headerUserMenuLink')
+  const { classes } = getClasses(document.head, { headerUserMenuLink: style })
+  link.classList.add(classes.headerUserMenuLink)
   link.href = href
   link.innerText = label
   return link
 }
 
-async function createUserMenu (store: IndexedFormula, user: NamedNode): Promise<HTMLElement> {
+
+async function createUserMenu (store: IndexedFormula, user: NamedNode, options: HeaderOptions): Promise<HTMLElement> {
   const fetcher = (<any>store).fetcher
   if (fetcher) {
     // Making sure that Profile is loaded before building menu
     await fetcher.load(user)
   }
   // const outliner = getOutliner(document)
-
-  const loggedInMenuList = document.createElement('ul')
-  loggedInMenuList.classList.add('header-user-menu__list')
+  // SAM Options: here is where I can take the list of options and add to loggedInMenuList...
+  let loggedInMenuList = document.createElement('ul')
+  // loggedInMenuList.classList.add('header-user-menu__list')
+  loggedInMenuList = addStyleClassToElement(loggedInMenuList, 'headerUserMenuList')
   loggedInMenuList.appendChild(createUserMenuItem(createUserMenuLink('Show your profile', user.uri)))
+  if (options.menuList) {
+    options.menuList.map(function (menuItem) {
+      loggedInMenuList.appendChild(createUserMenuItem(createUserMenuLink(menuItem.label, menuItem.url)))
+    })
+  }
   /*
   const menuItems = await getMenuItems(outliner)
   menuItems.forEach(item => {
@@ -178,8 +209,9 @@ async function createUserMenu (store: IndexedFormula, user: NamedNode): Promise<
   }) */
   loggedInMenuList.appendChild(createUserMenuItem(createUserMenuButton('Log out', () => solidAuthClient.logout())))
 
-  const loggedInMenu = document.createElement('nav')
+  let loggedInMenu = document.createElement('nav')
   loggedInMenu.classList.add('header-user-menu__navigation-menu')
+  loggedInMenu = addStyleClassToElement(loggedInMenu, 'headerUserMenuNavigationMenu')
   loggedInMenu.setAttribute('aria-hidden', 'true')
   loggedInMenu.appendChild(loggedInMenuList)
 
