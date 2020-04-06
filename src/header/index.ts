@@ -208,9 +208,9 @@ async function createUserMenu (store: IndexedFormula, user: NamedNode, options: 
   }) */
   loggedInMenuList.appendChild(createUserMenuItem(createUserMenuButton('Log out', () => solidAuthClient.logout())))
 
-  let loggedInMenu = document.createElement('nav')
+  const loggedInMenu = document.createElement('nav')
   loggedInMenu.classList.add('header-user-menu__navigation-menu')
-  loggedInMenu = addStyleClassToElement(loggedInMenu, 'headerUserMenuNavigationMenu')
+  addStyleClassToElement(loggedInMenu, 'headerUserMenuNavigationMenu')
   loggedInMenu.setAttribute('aria-hidden', 'true')
   loggedInMenu.appendChild(loggedInMenuList)
 
