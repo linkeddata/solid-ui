@@ -173,11 +173,15 @@ function addStyleClassToElement (element: any, styleClass: string) {
 }
 
 function createUserMenuLink (label: string, href: string): HTMLElement {
+  // if you have a uri then call that otherwise call on the button..
+  // specify action in mashlib..  when you have onclick this function should be called
+  // call property onclick if present it's a callback function, call upon that property
+  // will outside of this function..
   const link = document.createElement('a')
   // link.classList.add('header-user-menu__link')
-  const style = getStyle('headerUserMenuLink')
-  const { classes } = getClasses(document.head, { headerUserMenuLink: style })
-  link.classList.add(classes.headerUserMenuLink)
+  const style = getStyle('header-user-menu__link')
+  const { classes } = getClasses(document.head, { 'header-user-menu__link': style })
+  link.classList.add(classes['header-user-menu__link'])
   link.href = href
   link.innerText = label
   return link

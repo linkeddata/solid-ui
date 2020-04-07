@@ -1,5 +1,5 @@
 export const styleMap = {
-  headerUserMenuLink: {
+  'header-user-menu__link': {
     background: 'none',
     border: '0',
     color: 'black',
