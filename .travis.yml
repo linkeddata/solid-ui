@@ -2,7 +2,6 @@ language: node_js
 node_js:
   # see https://github.com/solid/solid-ui/issues/193 for discussion
   # of node versions supported for Travis.
-  - "12.0"
   - "12"
   - "lts/*"
   - "node"
