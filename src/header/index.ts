@@ -183,7 +183,6 @@ function createUserMenuLink (label: string, href: string): HTMLElement {
   return link
 }
 
-
 async function createUserMenu (store: IndexedFormula, user: NamedNode, options: HeaderOptions): Promise<HTMLElement> {
   const fetcher = (<any>store).fetcher
   if (fetcher) {
