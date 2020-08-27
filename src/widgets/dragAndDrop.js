@@ -12,8 +12,9 @@ module.exports = {
 }
 // const UI = require('../index.js') // this package
 
-function makeDropTarget (ele, droppedURIHandler, droppedFileHandler) {
+function makeDropTarget(ele, droppedURIHandler, droppedFileHandler) {
   var dragoverListener = function (e) {
+    debug.log('dragged')
     e.preventDefault() // Neeed else drop does not work [sic]
     e.dataTransfer.dropEffect = 'copy'
   }
@@ -53,7 +54,7 @@ function makeDropTarget (ele, droppedURIHandler, droppedFileHandler) {
     debug.log('Drop event. dropEffect: ' + e.dataTransfer.dropEffect)
     debug.log(
       'Drop event. types: ' +
-        (e.dataTransfer.types ? e.dataTransfer.types.join(', ') : 'NOPE')
+      (e.dataTransfer.types ? e.dataTransfer.types.join(', ') : 'NOPE')
     )
 
     var uris = null
@@ -72,15 +73,15 @@ function makeDropTarget (ele, droppedURIHandler, droppedFileHandler) {
             const f = files[i]
             debug.log(
               'Filename: ' +
-                f.name +
-                ', type: ' +
-                (f.type || 'n/a') +
-                ' size: ' +
-                f.size +
-                ' bytes, last modified: ' +
-                (f.lastModifiedDate
-                  ? f.lastModifiedDate.toLocaleDateString()
-                  : 'n/a')
+              f.name +
+              ', type: ' +
+              (f.type || 'n/a') +
+              ' size: ' +
+              f.size +
+              ' bytes, last modified: ' +
+              (f.lastModifiedDate
+                ? f.lastModifiedDate.toLocaleDateString()
+                : 'n/a')
             )
           }
           droppedFileHandler(files)
@@ -119,7 +120,7 @@ function makeDropTarget (ele, droppedURIHandler, droppedFileHandler) {
 //
 // Possibly later set the drag image too?
 //
-function makeDraggable (tr, obj) {
+function makeDraggable(tr, obj) {
   tr.setAttribute('draggable', 'true') // Stop the image being dragged instead - just the TR
 
   tr.addEventListener(
@@ -170,18 +171,18 @@ function makeDraggable (tr, obj) {
 **                              With file object an final URI as params
 */
 
-function uploadFiles (fetcher, files, fileBase, imageBase, successHandler) {
+function uploadFiles(fetcher, files, fileBase, imageBase, successHandler) {
   for (var i = 0; files[i]; i++) {
     const f = files[i]
     debug.log(
       ' dropped: Filename: ' +
-        f.name +
-        ', type: ' +
-        (f.type || 'n/a') +
-        ' size: ' +
-        f.size +
-        ' bytes, last modified: ' +
-        (f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a')
+      f.name +
+      ', type: ' +
+      (f.type || 'n/a') +
+      ' size: ' +
+      f.size +
+      ' bytes, last modified: ' +
+      (f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a')
     ) // See e.g. https://www.html5rocks.com/en/tutorials/file/dndfiles/
 
     // @@ Add: progress bar(s)
