@@ -6,7 +6,7 @@ import style from '../style'
 import * as debug from '../debug'
 import { info } from '../log'
 import { getClasses } from '../jss'
-import { uploadFiles } from './dragAndDrop.js'
+import { uploadFiles } from './dragAndDrop'
 
 /**
  * UI Widgets such as buttons
