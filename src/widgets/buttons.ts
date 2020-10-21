@@ -811,8 +811,8 @@ export function attachmentList (dom: HTMLDocument, subject: NamedNode, div: HTML
     uploadFiles(
       kb.fetcher,
       files,
-      options.uploadFolder?.uri, // Files
-      options.uploadFolder?.uri, // Pictures
+      options.uploadFolder?.uri as any, // Files
+      options.uploadFolder?.uri as any, // Pictures
       function (theFile, destURI) {
         const ins = [st(subject, predicate, kb.sym(destURI), doc)]
         kb.updater.update([], ins, function (uri, ok, errorBody, _xhr) {
