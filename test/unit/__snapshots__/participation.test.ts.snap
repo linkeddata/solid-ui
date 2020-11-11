@@ -6,6 +6,24 @@ exports[`manageParticipation runs 1`] = `
 />
 `;
 
+exports[`participationObject runs 1`] = `
+NamedNode {
+  "classOrder": 5,
+  "termType": "NamedNode",
+  "value": "https://test.com/#test#id1603969996694",
+}
+`;
+
+exports[`participationObject runs 2 1`] = `
+NamedNode {
+  "classOrder": 5,
+  "termType": "NamedNode",
+  "value": "https://test.com/#test#id1603969996695",
+}
+`;
+
+exports[`recordParticipation runs 1`] = `undefined`;
+
 exports[`renderPartipants returns without crashing when a person is not returned 1`] = `
 <table
   style="margin: 0.8em;"

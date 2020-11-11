@@ -1,0 +1,95 @@
+{
+	"name": "solid-ui",
+	"version": "2.3.3",
+	"description": "UI library for writing Solid read-write-web applications",
+	"main": "./lib/index.js",
+	"types": "./lib/index.d.ts",
+	"files": [
+		"lib",
+		"dist"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/solid/solid-ui"
+	},
+	"keywords": [
+		"solid",
+		"decentralized",
+		"widgets",
+		"ui",
+		"web",
+		"rdf",
+		"ldp",
+		"linked",
+		"data"
+	],
+	"author": "Tim Berners-Lee <timbl@mit.edu>",
+	"contributors": [
+		"Daniel Friedman <danielf@mit.edu>"
+	],
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/solid/solid-ui/issues"
+	},
+	"homepage": "https://github.com/solid/solid-ui",
+	"dependencies": {
+		"@babel/runtime": "^7.12.1",
+		"crypto-browserify": "^3.12.0",
+		"escape-html": "^1.0.3",
+		"jss": "^10.4.0",
+		"jss-preset-default": "^10.4.0",
+		"mime-types": "^2.1.27",
+		"pane-registry": "^2.3.2",
+		"path-browserify": "^1.0.1",
+		"rdflib": "^2.1.1",
+		"solid-auth-client": "^2.5.2",
+		"solid-namespace": "^0.5.0",
+		"stream-browserify": "^3.0.0",
+		"uuid": "^8.3.1"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.12.1",
+		"@babel/core": "^7.12.3",
+		"@babel/plugin-proposal-class-properties": "^7.12.1",
+		"@babel/plugin-proposal-optional-chaining": "^7.12.1",
+		"@babel/plugin-transform-async-to-generator": "^7.12.1",
+		"@babel/plugin-transform-runtime": "^7.12.1",
+		"@babel/preset-env": "^7.12.1",
+		"@babel/preset-typescript": "^7.12.1",
+		"@storybook/addon-actions": "^6.0.27",
+		"@storybook/addon-essentials": "^6.0.27",
+		"@storybook/addon-links": "^6.0.27",
+		"@storybook/html": "^6.0.27",
+		"@types/jest": "^26.0.15",
+		"@types/jsdom": "^16.2.4",
+		"@types/node": "^14.14.3",
+		"@typescript-eslint/eslint-plugin": "^4.5.0",
+		"@typescript-eslint/parser": "^4.5.0",
+		"babel-loader": "^8.1.0",
+		"eslint": "^7.12.0",
+		"eslint-plugin-jest": "^24.1.0",
+		"husky": "^4.3.0",
+		"jest": "^26.6.1",
+		"jsdom": "^16.4.0",
+		"lint-staged": "^10.4.2",
+		"react-is": "^17.0.1",
+		"solid-auth-cli": "^1.0.15",
+		"standard": "^15.0.0",
+		"ts-jest": "^26.4.2",
+		"typedoc": "^0.19.2",
+		"typescript": "^4.0.3",
+		"webpack": "^4.44.2",
+		"webpack-cli": "^4.1.0"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged",
+			"pre-push": "npm test"
+		}
+	},
+	"lint-staged": {
+		"src/**/*.(js|ts)": [
+			"eslint"
+		]
+	}
+}

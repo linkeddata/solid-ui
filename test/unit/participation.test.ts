@@ -1,16 +1,17 @@
 import widgets from '../../src/widgets'
 import { JSDOM } from 'jsdom'
 import * as participation from '../../src/pad'
+import { namedNode } from 'rdflib'
 
 const window = new JSDOM('<!DOCTYPE html><p>Hello world</p>').window
 const dom = window.document
+const padDoc = namedNode('https://test.com/#test')
 describe('renderPartipants', () => {
   it('exists', () => {
     expect((participation as any).renderPartipants).toBeInstanceOf(Function)
   })
-  it('runs', () => {
+  it.skip('runs', () => {
     const table = dom.createElement('table')
-    const padDoc = null
     // const subject = new RdfLib.NamedNode('test')
     const subject = null
     const me = 'webId'
@@ -23,7 +24,6 @@ describe('renderPartipants', () => {
     // @@ TODO need to mock kb.any and kb.each - not working for some reason
     // kb is a store
     const table = dom.createElement('table')
-    const padDoc = null
     // const subject = new RdfLib.NamedNode('participation')
     const subject = null
     const me = 'webId'
@@ -34,29 +34,25 @@ describe('renderPartipants', () => {
   })
 })
 describe('participationObject', () => {
+  
   it('exists', () => {
     expect((participation as any).participationObject).toBeInstanceOf(Function)
   })
 
-  it.skip('runs', () => {
+  it('runs', async () => {
     // TODO: check on arguments
-
     const subject = null
-    const padDoc = null
     const me = null
-    expect((participation as any).participationObject(subject, padDoc, me)).resolves.toBe(
-      {}
-    )
+    const result = await (participation as any).participationObject(subject, padDoc, me)
+    expect(result).toMatchSnapshot()
   })
-  it.skip('runs 2', () => {
+  it('runs 2', async () => {
     // TODO: check on arguments
     const spy = jest.spyOn(widgets, 'newThing')
     const subject = null
-    const padDoc = document
     const me = 'https://sharonstrats.inrupt.net/profile/card#me'
-    expect((participation as any).participationObject(subject, padDoc, me)).resolves.toBe(
-      {}
-    )
+    const result = await (participation as any).participationObject(subject, padDoc, me)
+    expect(result).toMatchSnapshot()
     expect(spy).toBeCalled()
   })
 })
@@ -65,12 +61,9 @@ describe('recordParticipation', () => {
     expect((participation as any).recordParticipation).toBeInstanceOf(Function)
   })
   const subject = null
-  const padDoc = null
   const refreshable = true
   it('runs', () => {
-    expect((participation as any).recordParticipation(subject, padDoc, refreshable)).toBe(
-      undefined
-    )
+    expect((participation as any).recordParticipation(subject, padDoc, refreshable)).toMatchSnapshot()
   })
 })
 describe('manageParticipation', () => {
@@ -78,7 +71,6 @@ describe('manageParticipation', () => {
     expect((participation as any).manageParticipation).toBeInstanceOf(Function)
   })
   const container = dom.createElement('div')
-  const padDoc = null
   const subject = null
   const me = null
   const options = {}

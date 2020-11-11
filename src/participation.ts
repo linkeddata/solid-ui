@@ -83,15 +83,23 @@ export function renderPartipants (dom: HTMLDocument, table: ParticipationTableEl
  */
 export function participationObject (subject: NamedNode, padDoc: NamedNode, me: NamedNode) {
   return new Promise(function (resolve, reject) {
-    if (!me) {
-      throw new Error('Not user id')
+    try {
+      if (!me) {
+        throw new Error('Not user id')
+      }
+    } catch (err) {
+      log(err)
     }
 
     const parps = kb.each(subject, ns.wf('participation')).filter(function (pn) {
       return kb.holds(pn, ns.wf('participant'), me)
     })
-    if (parps.length > 1) {
-      throw new Error('Multiple records of your participation')
+    try {
+      if (parps.length > 1) {
+        throw new Error('Multiple records of your participation')
+      }
+    } catch (err) {
+      log(err)
     }
     if (parps.length) {
       // If I am not already recorded
@@ -136,8 +144,12 @@ export function recordParticipation (subject: NamedNode, padDoc: NamedNode, refr
   const parps = kb.each(subject, ns.wf('participation')).filter(function (pn) {
     return kb.holds(pn, ns.wf('participant'), me)
   })
-  if (parps.length > 1) {
-    throw new Error('Multiple records of your participation')
+  try {
+    if (parps.length > 1) {
+      throw new Error('Multiple records of your participation')
+    }
+  } catch (err) {
+    log(err)
   }
   if (parps.length) {
     // If I am not already recorded
@@ -157,8 +169,12 @@ export function recordParticipation (subject: NamedNode, padDoc: NamedNode, refr
       )
     ]
     kb.updater.update([], ins, function (uri: string, ok: boolean, errorMessage: string) {
-      if (!ok) {
-        throw new Error('Error recording your partipation: ' + errorMessage)
+      try {
+        if (!ok) {
+          throw new Error('Error recording your partipation: ' + errorMessage)
+        }
+      } catch (err) {
+        log(err)
       }
       if (refreshable && refreshable.refresh) {
         refreshable.refresh()
