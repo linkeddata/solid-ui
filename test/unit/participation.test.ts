@@ -10,7 +10,7 @@ describe('renderPartipants', () => {
   it('exists', () => {
     expect((participation as any).renderPartipants).toBeInstanceOf(Function)
   })
-  it.skip('runs', () => {
+  it('runs', () => {
     const table = dom.createElement('table')
     // const subject = new RdfLib.NamedNode('test')
     const subject = null
@@ -34,11 +34,9 @@ describe('renderPartipants', () => {
   })
 })
 describe('participationObject', () => {
-  
   it('exists', () => {
     expect((participation as any).participationObject).toBeInstanceOf(Function)
   })
-
   it('runs', async () => {
     // TODO: check on arguments
     const subject = null
