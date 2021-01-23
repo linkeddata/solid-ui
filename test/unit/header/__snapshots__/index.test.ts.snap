@@ -238,7 +238,23 @@ exports[`createLoginSignUpButtons creates div 1`] = `
 <div
   class="header-banner__login-0-1-1"
 >
-  <div />
+  <div>
+    <div
+      class="SolidSignInOrSignUpBox"
+      style="display: flex;"
+    >
+      <input
+        style="padding: 1em; border-radius:0.5em; margin: 2em; font-size: 100%;background-color: #eef;"
+        type="button"
+        value="Log in"
+      />
+      <input
+        style="padding: 1em; border-radius:0.5em; margin: 2em; font-size: 100%;background-color: #efe;"
+        type="button"
+        value="Sign Up for Solid"
+      />
+    </div>
+  </div>
 </div>
 `;
 

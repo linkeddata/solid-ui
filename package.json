@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "npm run clean && npm run build-version && npm run build-lib && npm run build-types && npm run build-webpack && npm run build-storybook",
+    "build": "npm run clean && npm run build-version && npm run build-lib && npm run build-types && npm run build-webpack # FIXME: && npm run build-storybook",
     "build-lib": "babel src -d lib --source-maps --extensions \".ts,.js\"",
     "build-types": "tsc --emitDeclarationOnly",
     "build-version": "sh ./timestamp.sh > src/versionInfo.ts  && eslint \"src/versionInfo.ts\" --fix",
@@ -54,11 +54,13 @@
   "homepage": "https://github.com/solid/solid-ui",
   "dependencies": {
     "@babel/runtime": "^7.12.5",
+    "@inrupt/solid-client-authn-browser": "^0.3.0",
     "crypto-browserify": "^3.12.0",
     "escape-html": "^1.0.3",
     "jss": "^10.5.0",
     "jss-preset-default": "^10.5.0",
     "mime-types": "^2.1.27",
+    "node-uuid": "^1.4.7",
     "pane-registry": "^2.3.4",
     "path-browserify": "^1.0.1",
     "rdflib": "^2.1.3",

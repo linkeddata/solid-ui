@@ -21,8 +21,9 @@ import {
   selectWorkspace,
   setACLUserPublic,
   saveUser,
-  solidAuthClient
+  authSession
 } from '../../../src/authn/authn'
+import { Session } from '@inrupt/solid-client-authn-browser'
 import { AppDetails, AuthenticationContext } from '../../../src/authn/types'
 import { sym } from 'rdflib'
 
@@ -240,8 +241,8 @@ describe('saveUser', () => {
   })
 })
 
-describe('solidAuthClient', () => {
+describe('authSession', () => {
   it('exists', () => {
-    expect(solidAuthClient).toBeInstanceOf(Object)
+    expect(authSession).toBeInstanceOf(Session)
   })
 })

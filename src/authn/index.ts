@@ -24,7 +24,7 @@ import {
   selectWorkspace,
   setACLUserPublic,
   saveUser,
-  solidAuthClient
+  authSession
 } from './authn'
 
 export const authn = {
@@ -48,5 +48,5 @@ export const authn = {
   selectWorkspace,
   setACLUserPublic,
   saveUser,
-  solidAuthClient
+  authSession
 }

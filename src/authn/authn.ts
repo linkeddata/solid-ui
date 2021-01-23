@@ -27,6 +27,7 @@ import widgets from '../widgets'
 import ns from '../ns.js'
 import utils from '../utils.js'
 import { alert } from '../log'
+import authSession from './authSession'
 import { AppDetails, AuthenticationContext } from './types'
 import * as debug from '../debug'
 import { textInputStyle, buttonStyle, commentStyle } from '../style'
@@ -35,7 +36,7 @@ import { Quad_Object } from 'rdflib/lib/tf-types'
 import { solidLogicSingleton } from '../logic'
 import { CrossOriginForbiddenError, FetchError, NotFoundError, SameOriginForbiddenError, UnauthorizedError, ACL_LINK } from 'solid-logic'
 
-export { solidAuthClient }
+export { authSession }
 
 // const userCheckSite = 'https://databox.me/'
 
@@ -97,16 +98,10 @@ export function defaultTestUser (): NamedNode | null {
  * @returns Named Node or null
  */
 export function currentUser (): NamedNode | null {
-  const str = localStorage['solid-auth-client']
-  if (str) {
-    const da = JSON.parse(str)
-    if (da.session && da.session.webId) {
-      // @@ TODO check has not expired
-      return sym(da.session.webId)
-    }
+  if (authSession.info.webId) {
+    return sym(authSession.info.webId)
   }
-  return offlineTestID() // null unless testing
-  // JSON.parse(localStorage['solid-auth-client']).session.webId
+  return offlineTestID()
 }
 
 /**
@@ -846,11 +841,10 @@ function signInOrSignUpBox (
   signInPopUpButton.setAttribute('value', 'Log in')
   signInPopUpButton.setAttribute('style', `${signInButtonStyle}background-color: #eef;`)
 
-  signInPopUpButton.addEventListener('click', () => {
-    const offline = offlineTestID()
-    if (offline) return setUserCallback(offline.uri)
-    return solidAuthClient.popupLogin().then(session => {
-      const webIdURI = session.webId
+  authSession.onLogin(() => {
+    const sessionInfo = authSession.info
+    if (sessionInfo && sessionInfo.isLoggedIn) {
+      const webIdURI = sessionInfo.webId
       // setUserCallback(webIdURI)
       const divs = dom.getElementsByClassName(magicClassName)
       debug.log(`Logged in, ${divs.length} panels to be serviced`)
@@ -871,6 +865,23 @@ function signInOrSignUpBox (
           }
         }
       }
+    }
+  })
+
+  signInPopUpButton.addEventListener('click', () => {
+    const offline = offlineTestID()
+    if (offline) return setUserCallback(offline.uri)
+
+    const thisUrl = new URL(window.location.href).origin
+    // HACK solid-client-authn-js no longer comes with its own UI for selecting
+    // an IDP. This was the easiest way to get the user to select.
+    // TODO: make a nice UI to select an IDP
+    const issuer = prompt('Enter an issuer', thisUrl)
+    authSession.login({
+      // @ts-ignore this library requires a specific kind of URL that isn't global
+      redirectUrl: window.location.href,
+      // @ts-ignore
+      oidcIssuer: issuer
     })
   }, false)
 
@@ -894,8 +905,8 @@ function signInOrSignUpBox (
 /**
  * @returns {Promise<string|null>} Resolves with WebID URI or null
  */
-function webIdFromSession (session?: { webId: string }): string | null {
-  const webId = session ? session.webId : null
+function webIdFromSession (session?: { webId?: string }): string | null {
+  const webId = session?.webId ? session.webId : null
   if (webId) {
     saveUser(webId)
   }
@@ -912,42 +923,59 @@ function checkCurrentUser () {
 }
 */
 
+// HACK this global variable exists to prevent authSession.handleIncomingRedirect
+// From being called twice. It would not be needed if it automatically redirected
+// by iteself. See https://github.com/inrupt/solid-client-authn-js/issues/514
+var checkingRedirect = false
+
 /**
  * Retrieves currently logged in webId from either
- * defaultTestUser or SolidAuthClient
+ * defaultTestUser or SolidAuthn
  * @param [setUserCallback] Optional callback
  *
  * @returns Resolves with webId uri, if no callback provided
  */
-export function checkUser<T> (
+export async function checkUser<T> (
   setUserCallback?: (me: NamedNode | null) => T
-): Promise<NamedNode | T> {
+): Promise<NamedNode | T | null> {
+  /**
+   * Handle a successful authentication redirect
+   */
+  // HACK normally you wouldn't need to do a check to see if 'code' is in the
+  // query, but it was removed from solid-client-authn-js
+  // See https://github.com/inrupt/solid-client-authn-js/issues/421
+  // Remove this after
+  const authCode = new URL(window.location.href).searchParams.get('code')
+  if (authCode && !checkingRedirect) {
+    checkingRedirect = true
+    // Being redirected after requesting a token
+    await authSession
+      .handleIncomingRedirect(window.location.href)
+    // HACK solid-client-authn-js should automatically remove code and state
+    // from the URL, but it doesn't, so we do it manually here
+    // see https://github.com/inrupt/solid-client-authn-js/issues/514
+    const newPageUrl = new URL(window.location.href)
+    newPageUrl.searchParams.delete('code')
+    newPageUrl.searchParams.delete('state')
+    window.history.replaceState({}, '', newPageUrl.toString())
+  }
+
   // Check to see if already logged in / have the WebID
-  const me = defaultTestUser()
+  let me = defaultTestUser()
   if (me) {
     return Promise.resolve(setUserCallback ? setUserCallback(me) : me)
   }
 
   // doc = solidLogicSingleton.store.any(doc, ns.link('userMirror')) || doc
+  const webId = webIdFromSession(authSession.info)
 
-  return solidAuthClient
-    .currentSession()
-    .then(webIdFromSession)
-    .catch(err => {
-      debug.log('Error fetching currentSession:', err)
-    })
-    .then(webId => {
-      // if (webId.startsWith('dns:')) {  // legacy rww.io pseudo-users
-      //   webId = null
-      // }
-      const me = saveUser(webId)
+  me = saveUser(webId)
 
-      if (me) {
-        debug.log(`(Logged in as ${me} by authentication)`)
-      }
+  if (me) {
+    debug.log(`(Logged in as ${me} by authentication)`)
+  }
 
-      return setUserCallback ? setUserCallback(me) : me
-    })
+  return Promise.resolve(setUserCallback ? setUserCallback(me) : me)
 }
 
 /**
@@ -986,7 +1014,7 @@ export function loginStatusBox (
 
   function logoutButtonHandler (_event) {
     // UI.preferences.set('me', '')
-    solidAuthClient.logout().then(
+    authSession.logout().then(
       function () {
         const message = `Your WebID was ${me}. It has been forgotten.`
         me = null
@@ -1025,39 +1053,36 @@ export function loginStatusBox (
   }
 
   box.refresh = function () {
-    solidAuthClient.currentSession().then(
-      session => {
-        if (session && session.webId) {
-          me = sym(session.webId)
-        } else {
-          me = null
-        }
-        if ((me && box.me !== me.uri) || (!me && box.me)) {
-          widgets.clearElement(box)
-          if (me) {
-            box.appendChild(logoutButton(me, options))
-          } else {
-            box.appendChild(signInOrSignUpBox(dom, setIt, options))
-          }
-        }
-        box.me = me ? me.uri : null
-      },
-      err => {
-        alert(`loginStatusBox: ${err}`)
+    const sessionInfo = authSession.info
+    if (sessionInfo && sessionInfo.webId) {
+      me = sym(sessionInfo.webId)
+    } else {
+      me = null
+    }
+    if ((me && box.me !== me.uri) || (!me && box.me)) {
+      widgets.clearElement(box)
+      if (me) {
+        box.appendChild(logoutButton(me, options))
+      } else {
+        box.appendChild(signInOrSignUpBox(dom, setIt, options))
       }
-    )
+    }
+    box.me = me ? me.uri : null
   }
 
-  if (solidAuthClient.trackSession) {
-    solidAuthClient.trackSession(session => {
-      if (session && session.webId) {
-        me = sym(session.webId)
-      } else {
-        me = null
-      }
-      box.refresh()
-    })
+  function trackSession () {
+    const sessionInfo = authSession.info
+    if (sessionInfo && sessionInfo.webId) {
+      me = sym(sessionInfo.webId)
+    } else {
+      me = null
+    }
+    box.refresh()
   }
+
+  trackSession()
+  authSession.onLogin(trackSession)
+  authSession.onLogout(trackSession)
 
   box.me = '99999' // Force refresh
   box.refresh()
