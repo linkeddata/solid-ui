@@ -5,7 +5,7 @@
 
 /* global alert */
 import * as debug from '../debug'
-
+import { createMentionBox } from './mention'
 const $rdf = require('rdflib')
 const DateFolder = require('./dateFolder')
 
@@ -88,6 +88,57 @@ function desktopNotification (str) {
   // want to be respectful there is no need to bother them any more.
 }
 
+// HELPER CODE FOR MENTION - WILL NEED TO MOVE
+function pasteText (dom, { replacementText, cursorContext, activeQuery }) {
+  const lastIndex = cursorContext.textBeforeCursor.lastIndexOf(activeQuery)
+  cursorContext.textNode.textContent = cursorContext.textNodeContent.substring(0, lastIndex) + replacementText + cursorContext.textAfterCursor
+
+  const selection = dom.getSelection()
+  if (!selection) return
+
+  // put cursor at the end of the replaced text
+  const range = dom.createRange(dom)
+  range.setStart(cursorContext.textNode, lastIndex + replacementText.length)
+  range.setEnd(cursorContext.textNode, lastIndex + replacementText.length)
+  range.collapse(true)
+  selection.removeAllRanges()
+  selection.addRange(range)
+}
+function getCursorContext (dom) {
+  let cursorTextNodeAndParent = getTextNodeAndParent(dom)
+  if (!cursorTextNodeAndParent) return null
+
+  cursorTextNodeAndParent.textNodeParent.normalize()
+  cursorTextNodeAndParent = getTextNodeAndParent(dom)
+  if (!cursorTextNodeAndParent) return null
+
+  const { textNode, textNodeParent, selection } = cursorTextNodeAndParent
+
+  const range = selection.getRangeAt(0)
+  const textNodeContent = textNode.textContent
+  const cursorCharacterPosition = range.startOffset
+  if (!(cursorCharacterPosition >= 0)) return null
+  return {
+    textNode,
+    textNodeParent,
+    textNodeContent,
+    cursorCharacterPosition,
+    textBeforeCursor: textNodeContent.substring(0, cursorCharacterPosition),
+    textAfterCursor: textNodeContent.substr(cursorCharacterPosition)
+  }
+}
+function getTextNodeAndParent (dom) {
+  const selection = dom.getSelection()
+  if (!selection) return null
+
+  const textNode = selection.anchorNode
+  if (!textNode || textNode.nodeType !== Node.TEXT_NODE) return null
+  const textNodeParent = textNode.parentNode
+  if (!textNodeParent) return null
+
+  return { textNode, textNodeParent, selection }
+}
+// ************ END MENTION CODE
 /**
  * Common code for a chat (discussion area of messages about something)
  * This version runs over a series of files for different time periods
@@ -155,6 +206,15 @@ export async function infiniteMessageArea (dom, kb, chatChannel, options) {
     form.appendChild(rhs)
     form.AJAR_date = '9999-01-01T00:00:00Z' // ISO format for field sort
     let field, sendButton
+    debug.log('line 158')
+    const parps = kb
+      .each(chatChannel, ns.wf('participation'))
+      .map(function (parp) {
+        const name = parp.value.replace('/https:///', '').split('.')
+        debug.log('parp ' + name[0])
+        return [{ uri: parp.value, id: name[0] }]
+      })
+    parps.push({ uri: 'Testing', id: 'Tina' })
 
     async function sendMessage (text) {
       const now = new Date()
@@ -275,8 +335,13 @@ export async function infiniteMessageArea (dom, kb, chatChannel, options) {
       creatorAndDate(lhs, me, '', null)
 
       field = dom.createElement('textarea')
+      const mentionContainer = dom.createElement('span')
+      mentionContainer.className = 'mention-container'
+      mentionContainer.setAttribute('style', 'position:absolute; display: block; color: #999;')
       middle.innerHTML = ''
       middle.appendChild(field)
+      middle.appendChild(mentionContainer)
+
       field.rows = 3
       // field.cols = 40
       field.setAttribute('style', messageBodyStyle + 'background-color: #eef;')
@@ -286,6 +351,27 @@ export async function infiniteMessageArea (dom, kb, chatChannel, options) {
         'keydown',
         async function (e) {
           // User preference?
+          if (e.shiftKey) {
+            if (e.key === '@') {
+              const startPos = this.selectionStart
+              const endPos = this.selectionEnd
+              mentionContainer.appendChild(createMentionBox(dom, parps))
+              /* console.log('Selection')
+              console.dir(selection)
+              const options = parps.map(function (parp) {
+                selection.setAttribute('data-mention-id', 1)
+                selection.appendChild(dom.createTextNode('@' + parp.id))
+                console.log(parp.id)
+                console.log(parp.uri)
+                return null
+              })
+
+              const test = dom.getSelection()
+              const test2 = getCursorContext(dom)
+              field.autocomplete = 'on'
+              field.focus() */
+            }
+          }
           if (e.keyCode === 13) {
             if (!e.altKey) {
               // Alt-Enter just adds a new line
