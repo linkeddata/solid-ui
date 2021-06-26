@@ -1,0 +1,142 @@
+../src/media-capture.js:var $rdf = require('rdflib')
+../src/media-capture.js:  icons: require('./iconBase'),
+../src/media-capture.js:  ns: require('./ns'),
+../src/media-capture.js:  pad: require('./pad'),
+../src/media-capture.js:  store: require('./store'),
+../src/media-capture.js:  utils: require('./utils'),
+../src/media-capture.js:  widgets: require('./widgets')
+../src/media-capture.js:// const cameraIcon = require('./noun_Camera_1618446_000000') // load it in JS
+../src/ns.js:const solidNamespace = require('solid-namespace') // Delegate to this which takes RDFlib as param.
+../src/ns.js:const $rdf = require('rdflib')
+../src/test/test-acl.js:const acl = require('../acl')
+../src/test/test-acl.js:const rdf = require('../../../../linkeddata/rdflib.js/index.js')
+../src/chat/message.js:  authn: require('../authn/authn'),
+../src/chat/message.js:  icons: require('../iconBase'),
+../src/chat/message.js:  ns: require('../ns'),
+../src/chat/message.js:  media: require('../media-capture'),
+../src/chat/message.js:  pad: require('../pad'),
+../src/chat/message.js:  rdf: require('rdflib'),
+../src/chat/message.js:  store: require('../store'),
+../src/chat/message.js:  style: require('../style'),
+../src/chat/message.js:  utils: require('../utils'),
+../src/chat/message.js:  widgets: require('../widgets')
+../src/chat/message.js:// const { messageToolbar, sentimentStripLinked } = require('./messageTools')
+../src/chat/infinite.js:const $rdf = require('rdflib')
+../src/chat/infinite.js:const DateFolder = require('./dateFolder')
+../src/chat/infinite.js:  authn: require('../authn/authn'),
+../src/chat/infinite.js:  icons: require('../iconBase'),
+../src/chat/infinite.js:  ns: require('../ns'),
+../src/chat/infinite.js:  media: require('../media-capture'),
+../src/chat/infinite.js:  pad: require('../pad'),
+../src/chat/infinite.js:  rdf: require('rdflib'),
+../src/chat/infinite.js:  store: require('../store'),
+../src/chat/infinite.js:  style: require('../style'),
+../src/chat/infinite.js:  utils: require('../utils'),
+../src/chat/infinite.js:  widgets: require('../widgets')
+../src/chat/infinite.js:// const utils = require('./utils')
+../src/chat/infinite.js:const { renderMessage, creatorAndDate } = require('./message')
+../src/chat/infinite.js:const bookmarks = require('./bookmarks')
+../src/chat/thread.js:  authn: require('../authn/authn'),
+../src/chat/thread.js:  icons: require('../iconBase'),
+../src/chat/thread.js:  ns: require('../ns'),
+../src/chat/thread.js:  pad: require('../'),
+../src/chat/thread.js:  rdf: require('rdflib'),
+../src/chat/thread.js:  store: require('../store'),
+../src/chat/thread.js:  style: require('../style'),
+../src/chat/thread.js:  widgets: require('../widgets')
+../src/chat/thread.js:const utils = require('../utils')
+../src/chat/thread.js:const $rdf = require('rdflib')
+../src/chat/bookmarks.js:  authn: require('../authn/authn'),
+../src/chat/bookmarks.js:  icons: require('../iconBase'),
+../src/chat/bookmarks.js:  ns: require('../ns'),
+../src/chat/bookmarks.js:  media: require('../media-capture'),
+../src/chat/bookmarks.js:  pad: require('../pad'),
+../src/chat/bookmarks.js:  rdf: require('rdflib'),
+../src/chat/bookmarks.js:  store: require('../store'),
+../src/chat/bookmarks.js:  style: require('../style'),
+../src/chat/bookmarks.js:  utils: require('../utils'),
+../src/chat/bookmarks.js:  widgets: require('../widgets')
+../src/chat/dateFolder.js:const kb = require('../store.js')
+../src/chat/dateFolder.js:const ns = require('../ns.js')
+../src/chat/dateFolder.js:const $rdf = require('rdflib')
+../src/chat/messageTools.js:  authn: require('../authn/authn'),
+../src/chat/messageTools.js:  icons: require('../iconBase'),
+../src/chat/messageTools.js:  ns: require('../ns'),
+../src/chat/messageTools.js:  media: require('../media-capture'),
+../src/chat/messageTools.js:  pad: require('../pad'),
+../src/chat/messageTools.js:  rdf: require('rdflib'),
+../src/chat/messageTools.js:  store: require('../store'),
+../src/chat/messageTools.js:  style: require('../style'),
+../src/chat/messageTools.js:  utils: require('../utils'),
+../src/chat/messageTools.js:  widgets: require('../widgets')
+../src/chat/messageTools.js:const bookmarks = require('./bookmarks')
+../src/preferences.js:const kb = require('./store')
+../src/preferences.js:const ns = require('./ns')
+../src/preferences.js:const authn = require('./authn/authn')
+../src/preferences.js:const widgets = require('./widgets')
+../src/preferences.js:const pad = require('./pad')
+../src/preferences.js:const participation = require('./participation')
+../src/matrix.js:  icons: require('./iconBase'),
+../src/matrix.js:  ns: require('./ns'),
+../src/matrix.js:  rdf: require('rdflib'),
+../src/matrix.js:  store: require('./store'),
+../src/matrix.js:  widgets: require('./widgets')
+../src/matrix.js:const utils = require('./utils')
+../src/store.js:var rdf = require('rdflib')
+../src/create.js:// const error = require('./widgets/error')
+../src/create.js:// const widgets = require('./widgets/index')
+../src/create.js:// const utils = require('./utils')
+../src/create.js:// const UI = require('solid-ui')
+../src/create.js:  authn: require('./authn/authn'),
+../src/create.js:  icons: require('./iconBase'),
+../src/create.js:  ns: require('./ns'),
+../src/create.js:  store: require('./store'),
+../src/create.js:  style: require('./style'),
+../src/create.js:  utils: require('./utils'),
+../src/create.js:  widgets: require('./widgets')
+../src/folders.js:  icons: require('./iconBase'),
+../src/folders.js:  ns: require('./ns'),
+../src/folders.js:  rdf: require('rdflib'),
+../src/folders.js:  store: require('./store'),
+../src/folders.js:  widgets: require('./widgets'),
+../src/folders.js:  utils: require('./utils')
+../src/table.js:  icons: require('./iconBase'),
+../src/table.js:  log: require('./log'),
+../src/table.js:  ns: require('./ns'),
+../src/table.js:  store: require('./store'),
+../src/table.js:  widgets: require('./widgets')
+../src/table.js:const utils = require('./utils')
+../src/table.js:const $rdf = require('rdflib')
+../src/utils.js:  log: require('./log'),
+../src/utils.js:  ns: require('./ns'),
+../src/utils.js:  rdf: require('rdflib'),
+../src/utils.js:  store: require('./store')
+../src/authn/signup.js:var defaultConfig = require('./config-default')
+../src/widgets/peoplePicker.js:// const webClient = require('solid-web-client')(rdf)
+../src/widgets/index.js:// var aclModule = require('./acl.js')
+../src/widgets/index.js:  require('./peoplePicker'),
+../src/widgets/index.js:  require('./dragAndDrop'), // uploadFiles etc
+../src/widgets/index.js:  require('./error'), // UI.widgets.errorMessageBlock
+../src/widgets/index.js:  require('./buttons'),
+../src/widgets/index.js:  require('./forms')
+../src/widgets/dragAndDrop.js:const mime = require('mime-types')
+../src/widgets/dragAndDrop.js:// const UI = require('../index.js') // this package
+../src/widgets/forms.js:  icons: require('../iconBase'),
+../src/widgets/forms.js:  log: require('../log'),
+../src/widgets/forms.js:  ns: require('../ns'),
+../src/widgets/forms.js:  store: require('../store'),
+../src/widgets/forms.js:  style: require('../style'),
+../src/widgets/forms.js:const $rdf = require('rdflib')
+../src/widgets/forms.js:const error = require('./error')
+../src/widgets/forms.js:const buttons = require('./buttons')
+../src/widgets/forms.js:const ns = require('../ns')
+../src/widgets/forms.js:const utils = require('../utils')
+../src/messageArea.js:  authn: require('./authn/authn'),
+../src/messageArea.js:  icons: require('./iconBase'),
+../src/messageArea.js:  ns: require('./ns'),
+../src/messageArea.js:  rdf: require('rdflib'),
+../src/messageArea.js:  store: require('./store'),
+../src/messageArea.js:  style: require('./style'),
+../src/messageArea.js:  widgets: require('./widgets')
+../src/messageArea.js:const $rdf = require('rdflib')
+../src/messageArea.js:const utils = require('./utils')

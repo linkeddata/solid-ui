@@ -1,0 +1,142 @@
+<media-capture.js> :dependsOn <rdflib>.
+<media-capture.js> :dependsOn <./iconBase>.
+<media-capture.js> :dependsOn <./ns>.
+<media-capture.js> :dependsOn <./pad>.
+<media-capture.js> :dependsOn <./store>.
+<media-capture.js> :dependsOn <./utils>.
+<media-capture.js> :dependsOn <./widgets>.
+
+
+<ns.js> :dependsOn <rdflib>.
+<test/test-acl.js> :dependsOn <../acl>.
+<test/test-acl.js> :dependsOn <../../../../linkeddata/rdflib.js/index.js>.
+<chat/message.js> :dependsOn <../authn/authn>.
+<chat/message.js> :dependsOn <../iconBase>.
+<chat/message.js> :dependsOn <../ns>.
+<chat/message.js> :dependsOn <../media-capture>.
+<chat/message.js> :dependsOn <../pad>.
+<chat/message.js> :dependsOn <rdflib>.
+<chat/message.js> :dependsOn <../store>.
+<chat/message.js> :dependsOn <../style>.
+<chat/message.js> :dependsOn <../utils>.
+<chat/message.js> :dependsOn <../widgets>.
+
+<chat/infinite.js> :dependsOn <rdflib>.
+<chat/infinite.js> :dependsOn <./dateFolder>.
+<chat/infinite.js> :dependsOn <../authn/authn>.
+<chat/infinite.js> :dependsOn <../iconBase>.
+<chat/infinite.js> :dependsOn <../ns>.
+<chat/infinite.js> :dependsOn <../media-capture>.
+<chat/infinite.js> :dependsOn <../pad>.
+<chat/infinite.js> :dependsOn <rdflib>.
+<chat/infinite.js> :dependsOn <../store>.
+<chat/infinite.js> :dependsOn <../style>.
+<chat/infinite.js> :dependsOn <../utils>.
+<chat/infinite.js> :dependsOn <../widgets>.
+
+<chat/infinite.js> :dependsOn <./message>.
+<chat/infinite.js> :dependsOn <./bookmarks>.
+<chat/thread.js> :dependsOn <../authn/authn>.
+<chat/thread.js> :dependsOn <../iconBase>.
+<chat/thread.js> :dependsOn <../ns>.
+<chat/thread.js> :dependsOn <../>.
+<chat/thread.js> :dependsOn <rdflib>.
+<chat/thread.js> :dependsOn <../store>.
+<chat/thread.js> :dependsOn <../style>.
+<chat/thread.js> :dependsOn <../widgets>.
+<chat/thread.js> :dependsOn <../utils>.
+<chat/thread.js> :dependsOn <rdflib>.
+<chat/bookmarks.js> :dependsOn <../authn/authn>.
+<chat/bookmarks.js> :dependsOn <../iconBase>.
+<chat/bookmarks.js> :dependsOn <../ns>.
+<chat/bookmarks.js> :dependsOn <../media-capture>.
+<chat/bookmarks.js> :dependsOn <../pad>.
+<chat/bookmarks.js> :dependsOn <rdflib>.
+<chat/bookmarks.js> :dependsOn <../store>.
+<chat/bookmarks.js> :dependsOn <../style>.
+<chat/bookmarks.js> :dependsOn <../utils>.
+<chat/bookmarks.js> :dependsOn <../widgets>.
+<chat/dateFolder.js> :dependsOn <../store.js>.
+<chat/dateFolder.js> :dependsOn <../ns.js>.
+<chat/dateFolder.js> :dependsOn <rdflib>.
+<chat/messageTools.js> :dependsOn <../authn/authn>.
+<chat/messageTools.js> :dependsOn <../iconBase>.
+<chat/messageTools.js> :dependsOn <../ns>.
+<chat/messageTools.js> :dependsOn <../media-capture>.
+<chat/messageTools.js> :dependsOn <../pad>.
+<chat/messageTools.js> :dependsOn <rdflib>.
+<chat/messageTools.js> :dependsOn <../store>.
+<chat/messageTools.js> :dependsOn <../style>.
+<chat/messageTools.js> :dependsOn <../utils>.
+<chat/messageTools.js> :dependsOn <../widgets>.
+<chat/messageTools.js> :dependsOn <./bookmarks>.
+<preferences.js> :dependsOn <./store>.
+<preferences.js> :dependsOn <./ns>.
+<preferences.js> :dependsOn <./authn/authn>.
+<preferences.js> :dependsOn <./widgets>.
+<preferences.js> :dependsOn <./pad>.
+<preferences.js> :dependsOn <./participation>.
+<matrix.js> :dependsOn <./iconBase>.
+<matrix.js> :dependsOn <./ns>.
+<matrix.js> :dependsOn <rdflib>.
+<matrix.js> :dependsOn <./store>.
+<matrix.js> :dependsOn <./widgets>.
+<matrix.js> :dependsOn <./utils>.
+<store.js> :dependsOn <rdflib>.
+
+
+
+
+<create.js> :dependsOn <./authn/authn>.
+<create.js> :dependsOn <./iconBase>.
+<create.js> :dependsOn <./ns>.
+<create.js> :dependsOn <./store>.
+<create.js> :dependsOn <./style>.
+<create.js> :dependsOn <./utils>.
+<create.js> :dependsOn <./widgets>.
+<folders.js> :dependsOn <./iconBase>.
+<folders.js> :dependsOn <./ns>.
+<folders.js> :dependsOn <rdflib>.
+<folders.js> :dependsOn <./store>.
+<folders.js> :dependsOn <./widgets>.
+<folders.js> :dependsOn <./utils>.
+<table.js> :dependsOn <./iconBase>.
+<table.js> :dependsOn <./log>.
+<table.js> :dependsOn <./ns>.
+<table.js> :dependsOn <./store>.
+<table.js> :dependsOn <./widgets>.
+<table.js> :dependsOn <./utils>.
+<table.js> :dependsOn <rdflib>.
+<utils.js> :dependsOn <./log>.
+<utils.js> :dependsOn <./ns>.
+<utils.js> :dependsOn <rdflib>.
+<utils.js> :dependsOn <./store>.
+<authn/signup.js> :dependsOn <./config-default>.
+
+
+<widgets/index.js> :dependsOn <./peoplePicker>.
+
+
+<widgets/index.js> :dependsOn <./buttons>.
+<widgets/index.js> :dependsOn <./forms>.
+<widgets/dragAndDrop.js> :dependsOn <mime-types>.
+
+<widgets/forms.js> :dependsOn <../iconBase>.
+<widgets/forms.js> :dependsOn <../log>.
+<widgets/forms.js> :dependsOn <../ns>.
+<widgets/forms.js> :dependsOn <../store>.
+<widgets/forms.js> :dependsOn <../style>.
+<widgets/forms.js> :dependsOn <rdflib>.
+<widgets/forms.js> :dependsOn <./error>.
+<widgets/forms.js> :dependsOn <./buttons>.
+<widgets/forms.js> :dependsOn <../ns>.
+<widgets/forms.js> :dependsOn <../utils>.
+<messageArea.js> :dependsOn <./authn/authn>.
+<messageArea.js> :dependsOn <./iconBase>.
+<messageArea.js> :dependsOn <./ns>.
+<messageArea.js> :dependsOn <rdflib>.
+<messageArea.js> :dependsOn <./store>.
+<messageArea.js> :dependsOn <./style>.
+<messageArea.js> :dependsOn <./widgets>.
+<messageArea.js> :dependsOn <rdflib>.
+<messageArea.js> :dependsOn <./utils>.
